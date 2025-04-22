@@ -112,6 +112,9 @@ public class Usuario implements Serializable {
     }
 
 
+
+    
+    
 	public PriorityQueue<Usuario> getAgenda() {
 		return new PriorityQueue<>(agenda);
 	}
@@ -155,7 +158,7 @@ public class Usuario implements Serializable {
 	            return contacto;
 	        }
 	    }
-	    return null; // No se encontró
+	    return null; // No se encontrï¿½
 	}
 	public boolean estaContacto(int puerto) {
 	    PriorityQueue<Usuario> agendaCopia = new PriorityQueue<>(agenda);

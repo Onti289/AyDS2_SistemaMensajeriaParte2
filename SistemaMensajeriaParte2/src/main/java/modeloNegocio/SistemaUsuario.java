@@ -19,9 +19,8 @@ import dto.UsuarioDTO;
 import excepciones.ErrorEnvioMensajeException;
 
 public class SistemaUsuario extends Observable{
-	private ArrayList <Usuario> listaContactos;
-	private static SistemaUsuario sistema_instancia=null;
 	private Usuario usuario;
+	private static SistemaUsuario sistema_instancia=null;
 	
 	
 	
@@ -34,8 +33,8 @@ public class SistemaUsuario extends Observable{
 		return sistema_instancia;
 	} 
 	
-	public boolean existeContactoPorNombre(List<Usuario> lista, String nombreBuscado) {
-	    for (Usuario u : lista) {
+	public boolean existeContactoPorNombre(String nombreBuscado) {
+	    for (Usuario u : getAgenda()) {
 	        if (u.getNickName().equalsIgnoreCase(nombreBuscado)) {
 	            return true;
 	        }
@@ -43,30 +42,29 @@ public class SistemaUsuario extends Observable{
 	    return false;
 	}
 	
-	public void agregarContacto(String nickName,int puerto) {
+    public void agregarContacto(String nickName,int puerto) {
 		
-		if (!existeContactoPorNombre(listaContactos,nickName))
-		   this.listaContactos.add(new Usuario(nickName,puerto));
+		if (!existeContactoPorNombre(nickName))
+		   this.usuario.agregaContacto(new Usuario(nickName,puerto));
 		//else
 		   //lanzar una exepcion nicknameExistenteException	
 	}
 
-
 	public PriorityQueue<Usuario> getAgenda() {
-		return this.listaContactos.getAgenda();
+		return this.usuario.getAgenda();
 	}
 
 	public ArrayList<MensajeDTO> getChat(int puerto,String ip){
-		return listaContactos.getChat(puerto,ip);
+		return usuario.getChat(puerto,ip);
 	}
 	public ArrayList<Mensaje> getMensajes(){
-    	return listaContactos.getMensajes();
+    	return usuario.getMensajes();
     }
 	
 	public void setContactoActual(int puerto,String ip) {
-		Usuario contacto=listaContactos.getBuscaContacto(puerto);
+		Usuario contacto=usuario.getBuscaContacto(puerto);
 		if(contacto!=null) {
-			this.listaContactos.agregarConversacion(contacto);
+			this.usuario.agregarConversacion(contacto);
 		}
 	}
 	
@@ -79,7 +77,7 @@ public class SistemaUsuario extends Observable{
 	                    Object recibido = ois.readObject();
 	                    if (recibido instanceof Mensaje) {
 	                        Mensaje mensaje = (Mensaje) recibido;
-	                        this.listaContactos.recibirMensaje(mensaje);
+	                        this.usuario.recibirMensaje(mensaje);
 	                        setChanged(); // importante
 	     		           	notifyObservers(mensaje);
 	                        
@@ -97,7 +95,7 @@ public class SistemaUsuario extends Observable{
 	}
 
 	public Usuario buscarUsuarioPorDTO(UsuarioDTO dto) {
-	    for (Usuario u : listaContactos.getAgenda()) {
+	    for (Usuario u : usuario.getAgenda()) {
 	        if (u.getPuerto() == dto.getPuerto() && u.getIp()== dto.getIp()) {
 	            return u;
 	        }
@@ -105,7 +103,7 @@ public class SistemaUsuario extends Observable{
 	    return null; // o lanzar excepci�n si quer�s asegurarte que est�
 	}
 	public Usuario getUsuario() {
-		return this.listaContactos;
+		return this.usuario;
 	}
 	public void enviarMensaje(UsuarioDTO contacto, String mensaje)  {
 	    try (Socket socket = new Socket(contacto.getIp(), contacto.getPuerto())) {
@@ -113,11 +111,11 @@ public class SistemaUsuario extends Observable{
 	    	Usuario ureceptor=this.buscarUsuarioPorDTO(contacto);
 	    	Mensaje msg;
 	    	if(ureceptor!=null) {
-	    		msg=new Mensaje(mensaje,LocalDateTime.now(),this.listaContactos,ureceptor); 
+	    		msg=new Mensaje(mensaje,LocalDateTime.now(),this.usuario,ureceptor); 
 	    		oos.writeObject(msg);
 	    		oos.flush();
 		    	oos.close();
-		    	this.listaContactos.guardarMensaje(msg);
+		    	this.usuario.guardarMensaje(msg);
 		    	setChanged(); // importante
 			    notifyObservers(msg);
 	    	}
@@ -139,11 +137,11 @@ public class SistemaUsuario extends Observable{
 
 	
 	public List<Usuario> getListaConversaciones() {
-		return this.listaContactos.getListaConversaciones();
+		return this.usuario.getListaConversaciones();
 	}
 	public String getAlias(int puerto) {
 		String name;
-		PriorityQueue<Usuario> lista=this.listaContactos.getAgenda();
+		PriorityQueue<Usuario> lista=this.usuario.getAgenda();
 		while (!lista.isEmpty()) {
 	        Usuario contacto = lista.poll();
 	        if (contacto.getPuerto() == puerto) {

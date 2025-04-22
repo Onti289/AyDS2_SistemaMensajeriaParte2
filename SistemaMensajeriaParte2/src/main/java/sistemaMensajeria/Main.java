@@ -1,13 +1,13 @@
 package sistemaMensajeria;
 
 import controlador.Controlador;
-import modeloNegocio.SistemaMensajeria;
+import modeloNegocio.SistemaUsuario;
 import vistas.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        SistemaMensajeria sMensajeria=SistemaMensajeria.get_Instancia();
+        SistemaUsuario sMensajeria=SistemaUsuario.get_Instancia();
         Controlador controlador=new Controlador(sMensajeria);
 
     }

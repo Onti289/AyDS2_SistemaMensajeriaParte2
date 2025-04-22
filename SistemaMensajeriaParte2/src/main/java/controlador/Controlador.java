@@ -19,9 +19,9 @@ import vistas.*;
 public class Controlador implements ActionListener,Observer{
 	protected IVista ventana;
 	protected IVista ventana2;
-	protected SistemaMensajeria sistemaMensajeria;
+	protected SistemaUsuario sistemaMensajeria;
 	
-	public Controlador(SistemaMensajeria sistemaMensajeria) {
+	public Controlador(SistemaUsuario sistemaMensajeria) {
 		this.ventana = new Ventanalogin(this);
 		ventana.setVisible(true);
 		this.sistemaMensajeria=sistemaMensajeria;
@@ -33,7 +33,7 @@ public class Controlador implements ActionListener,Observer{
 		return ventana;
 	}
 
-	public SistemaMensajeria getSistemaMensajeria() {
+	public SistemaUsuario getSistemaMensajeria() {
 		return sistemaMensajeria;
 	}
 
@@ -43,7 +43,7 @@ public class Controlador implements ActionListener,Observer{
 		this.ventana.setVisible(true);
 	}
 	public void setUser(String nickName,int puerto) {
-		sistemaMensajeria.setUsuario(nickName,puerto);
+		sistemaMensajeria.agregarContacto(nickName,puerto);
 		this.ventana.setVisible(false);
 		this.setVentana(new VentanaPrincipal(this));
 		this.ventana.setVisible(true);
@@ -208,7 +208,7 @@ public class Controlador implements ActionListener,Observer{
 	    	VentanaPrincipal vp = (VentanaPrincipal) ventana;
 	        vp.setTextFieldNameContacto(contacto.getNombre());
 	        vp.limpiarChat(); 
-	        this.cargaChat(contacto.getPuerto(), contacto.getIp()); // Mostrás historial
+	        this.cargaChat(contacto.getPuerto(), contacto.getIp()); // Mostrï¿½s historial
 	    }
 	}
 
@@ -232,7 +232,7 @@ public class Controlador implements ActionListener,Observer{
 	            		//String alias=this.sistemaMensajeria.getAlias(mensaje.getEmisor().getPuerto());
 	            		//vp.agregarMensajeAchat(mensaje.getContenido(),mensaje.getFechayhora(),alias);
 	            		vp.limpiarChat(); 
-            		    this.cargaChat(mensaje.getEmisor().getPuerto(), mensaje.getEmisor().getIp()); // Mostrás historial
+            		    this.cargaChat(mensaje.getEmisor().getPuerto(), mensaje.getEmisor().getIp()); // Mostrï¿½s historial
 						}//notifica llega cuando no hay conversaciones o no es contacto actual
 	            	else {
 	            		vp.actualizarListaChats(this.getListaConversaciones());

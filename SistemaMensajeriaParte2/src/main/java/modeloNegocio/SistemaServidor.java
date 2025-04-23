@@ -44,7 +44,7 @@ public class SistemaServidor {
 		return false;  	
 	}
 	
-	public void loginUsuario(String nickName,int puerto) {
+	public void loginUsuario(String nickName,int puerto) { //agregar ip
 		if (this.existeUsuarioPorNombre(nickName) && this.puertoCorrecto(nickName,puerto) && !this.estaConectado(nickName)) {
            System.out.print("hola");	
 		   listaConectados.add(new Usuario(nickName, puerto));

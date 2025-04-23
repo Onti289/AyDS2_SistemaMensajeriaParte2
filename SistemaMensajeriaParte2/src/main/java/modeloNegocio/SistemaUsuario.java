@@ -47,7 +47,6 @@ public class SistemaUsuario extends Observable{
 		if (!existeContactoPorNombre(nickName))
 		   this.usuario.agregaContacto(new Usuario(nickName,puerto));
 		//else
-		   //lanzar una exepcion nicknameExistenteException	
 	}
 
 	public PriorityQueue<Usuario> getAgenda() {

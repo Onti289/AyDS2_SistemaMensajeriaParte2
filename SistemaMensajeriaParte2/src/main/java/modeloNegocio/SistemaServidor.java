@@ -67,7 +67,7 @@ public class SistemaServidor {
 							System.out.println("Usuario registrado: " + usuario.getNombre() + " (" + clave + ")");
 						} else {// entra si lo que recibe en vez de usuario es mensaje
 							if (recibido instanceof Mensaje) {
-
+								
 							}
 						}
 					} catch (Exception e) {

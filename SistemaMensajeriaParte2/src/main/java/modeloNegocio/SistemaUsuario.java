@@ -50,7 +50,7 @@ public class SistemaUsuario extends Observable {
 		this.usuario = new Usuario(nickname, puerto, ip);
 	}
 
-	public boolean eContactoPorNombre(PriorityQueue<Usuario> lista, String nombreBuscado) {
+	public boolean existeContactoPorNombre(PriorityQueue<Usuario> lista, String nombreBuscado) {
 		for (Usuario u : lista) {
 			if (u.getNickName().equalsIgnoreCase(nombreBuscado)) {
 				return true;

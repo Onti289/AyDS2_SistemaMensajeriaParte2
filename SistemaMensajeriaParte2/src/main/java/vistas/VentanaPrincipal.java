@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controlador.Controlador;
+import controlador.ControladorUsuario;
 import dto.UsuarioDTO;
 import modeloNegocio.Usuario;
 import util.Util;
@@ -47,7 +47,7 @@ public class VentanaPrincipal extends JFrame implements IVista, ActionListener, 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textFieldMensaje;
-	private Controlador controlador;
+	private ControladorUsuario controlador;
 	private JButton botonAgregarContacto;
 	private JButton botonNuevaConversacion;
 	private JButton botonEnviar;
@@ -63,7 +63,7 @@ public class VentanaPrincipal extends JFrame implements IVista, ActionListener, 
 	/**
 	 * Create the frame.
 	 */
-	public VentanaPrincipal(Controlador controlador) {
+	public VentanaPrincipal(ControladorUsuario controlador) {
 		this.controlador = controlador;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);

@@ -2,7 +2,7 @@ package vistas;
 
 import java.awt.event.ActionListener;
 
-import controlador.Controlador;
+import controlador.ControladorUsuario;
 
 public interface IVista {
 

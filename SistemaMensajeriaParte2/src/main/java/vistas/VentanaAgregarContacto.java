@@ -6,7 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controlador.Controlador;
+import controlador.ControladorUsuario;
+import controlador.ControladorServer;
 import util.Util;
 
 import java.awt.GridLayout;
@@ -38,7 +39,7 @@ public class VentanaAgregarContacto extends JFrame implements IVista, ActionList
 	private JTextField textFieldPuerto;
 	private JTextField textFieldIP;
 	private JTextField textFieldNickname;
-	private Controlador controlador;
+	private ControladorServer controladorServer;
 
 	/**
 	 * Launch the application.
@@ -47,8 +48,8 @@ public class VentanaAgregarContacto extends JFrame implements IVista, ActionList
 	/**
 	 * Create the frame.
 	 */
-	public VentanaAgregarContacto(Controlador controlador) {
-		this.controlador = controlador;
+	public VentanaAgregarContacto(ControladorServer constroladorServer) {
+		this.controladorServer = constroladorServer;
 		setTitle("Agregar contacto");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -3,16 +3,16 @@ package modeloNegocio;
 import java.io.Serializable;
 
 public class Solicitud implements Serializable {
-	private String tipo; // Ej: "OBTENER_USUARIOS"
+	private String tipoSolicitud; // Ej: "OBTENER_USUARIOS"
 	private Usuario usuario;
 
 	public Solicitud(Usuario usuario, String tipo) {
-		this.tipo = tipo;
+		this.tipoSolicitud = tipo;
 		this.usuario = usuario;
 	}
 
 	public String getTipo() {
-		return tipo;
+		return tipoSolicitud;
 	}
 
 	public Usuario getUsuario() {

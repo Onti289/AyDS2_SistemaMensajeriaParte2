@@ -35,7 +35,7 @@ public class SistemaUsuario extends Observable {
 		return this.usuario.getPuerto();
 	}
 
-	public void obtenerListaUsuarios() {
+	public void CargarDirectorio() {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			Solicitud solicitud = new Solicitud(this.usuario, Util.SOLICITA_LISTA_USUARIO);

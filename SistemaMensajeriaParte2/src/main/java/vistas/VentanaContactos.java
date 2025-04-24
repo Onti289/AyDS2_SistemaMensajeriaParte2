@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controlador.Controlador;
+import controlador.ControladorUsuario;
 import dto.UsuarioDTO;
 import util.Util;
 
@@ -30,7 +30,7 @@ public class VentanaContactos extends JFrame implements IVista, ActionListener {
 	private JButton btnIniciarConversacion;
 	private JScrollPane scrollPane;
 	private JList<UsuarioDTO> list;
-	private Controlador controlador;
+	private ControladorUsuario controlador;
 
 	/**
 	 * Launch the application.
@@ -39,7 +39,7 @@ public class VentanaContactos extends JFrame implements IVista, ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaContactos(Controlador controlador) {
+	public VentanaContactos(ControladorUsuario controlador) {
 		this.controlador = controlador;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);

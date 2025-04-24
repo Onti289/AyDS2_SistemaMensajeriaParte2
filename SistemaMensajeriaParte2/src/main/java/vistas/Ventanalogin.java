@@ -28,7 +28,7 @@ public class Ventanalogin extends JFrame implements IVista, ActionListener, KeyL
 	private JTextField txtUsuario;
 	private JButton botonRegistrar;
 	private JTextField textFieldPuerto;
-	private Controlador controlador;
+	private ControladorUsuario controlador;
 
 	/**
 	 * Launch the application.
@@ -37,7 +37,7 @@ public class Ventanalogin extends JFrame implements IVista, ActionListener, KeyL
 	/**
 	 * Create the frame.
 	 */
-	public Ventanalogin(Controlador controlador) {
+	public Ventanalogin(ControladorUsuario controlador) {
 		this.controlador = controlador;
 		setTitle("Sistema de mensajer a");
 		setResizable(false);

@@ -2,6 +2,7 @@ package modeloNegocio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,7 +13,7 @@ import dto.UsuarioDTO;
 import excepciones.ErrorEnvioMensajeException;
 import util.Util;
 
-public class SistemaServidor {
+public class SistemaServidor extends Observable {
 
 	private ArrayList<Usuario> listaUsuarios;
 	private ArrayList<Usuario> listaConectados;
@@ -61,13 +62,12 @@ public class SistemaServidor {
 						Object recibido = ois.readObject();
 						if (recibido instanceof UsuarioDTO) {
 							UsuarioDTO usuario = (UsuarioDTO) recibido;
-							String clave = usuario.getIp() + ":" + usuario.getPuerto();
 							registrarUsuario(usuario.getNombre(), usuario.getPuerto());
 							enviaUsuarioRegistrado(usuario);
-							System.out.println("Usuario registrado: " + usuario.getNombre() + " (" + clave + ")");
 						} else {// entra si lo que recibe en vez de usuario es mensaje
-							if (recibido instanceof Mensaje) {
-								
+							if (recibido instanceof Solicitud) {	
+								setChanged(); // importante
+								notifyObservers((Solicitud)recibido);
 							}
 						}
 					} catch (Exception e) {

@@ -1,10 +1,14 @@
 package sistemaMensajeria;
 
+import modeloNegocio.SistemaServidor;
+import modeloNegocio.SistemaUsuario;
+
 public class MainServidor {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		SistemaServidor servidor = SistemaServidor.get_Instancia();
+		servidor.iniciaServidor();
 	}
 
 }

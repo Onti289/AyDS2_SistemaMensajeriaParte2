@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public class IPInvalidoException extends IOException {
 
-    public IPInvalidoException(String message) {
-        super(message);
-    }
+	public IPInvalidoException(String message) {
+		super(message);
+	}
 
 }

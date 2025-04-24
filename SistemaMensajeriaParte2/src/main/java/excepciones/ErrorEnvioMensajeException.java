@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public class ErrorEnvioMensajeException extends IOException {
 
-    public ErrorEnvioMensajeException(String message) {
-        super(message);
-    }
+	public ErrorEnvioMensajeException(String message) {
+		super(message);
+	}
 
 }

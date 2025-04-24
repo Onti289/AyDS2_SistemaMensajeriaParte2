@@ -22,7 +22,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 
-public class VentanaContactos extends JFrame implements IVista,ActionListener {
+public class VentanaContactos extends JFrame implements IVista, ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -31,6 +31,7 @@ public class VentanaContactos extends JFrame implements IVista,ActionListener {
 	private JScrollPane scrollPane;
 	private JList<UsuarioDTO> list;
 	private Controlador controlador;
+
 	/**
 	 * Launch the application.
 	 */
@@ -39,7 +40,7 @@ public class VentanaContactos extends JFrame implements IVista,ActionListener {
 	 * Create the frame.
 	 */
 	public VentanaContactos(Controlador controlador) {
-		this.controlador=controlador;
+		this.controlador = controlador;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		this.contentPane = new JPanel();
@@ -47,10 +48,10 @@ public class VentanaContactos extends JFrame implements IVista,ActionListener {
 
 		setContentPane(this.contentPane);
 		this.contentPane.setLayout(new BorderLayout(0, 0));
-		
+
 		this.panelIniciar = new JPanel();
 		this.contentPane.add(this.panelIniciar, BorderLayout.SOUTH);
-		
+
 		this.btnIniciarConversacion = new JButton("Iniciar conversacion");
 		this.btnIniciarConversacion.setActionCommand(Util.CTEINICIARCONVERSACION);
 		this.btnIniciarConversacion.setToolTipText("Iniciar conversacion");
@@ -58,33 +59,34 @@ public class VentanaContactos extends JFrame implements IVista,ActionListener {
 		this.btnIniciarConversacion.setEnabled(false);
 		this.scrollPane = new JScrollPane();
 		this.contentPane.add(this.scrollPane, BorderLayout.CENTER);
-		
+
 		DefaultListModel<UsuarioDTO> modelo = new DefaultListModel<>();
 		modelo.clear();
-		
+
 		for (UsuarioDTO c : controlador.getAgenda()) {
-		    modelo.addElement(c);
+			modelo.addElement(c);
 		}
 
-		this.list  = new JList<>(modelo);
-		// Agrego listener para habilitar el botón al seleccionar un contacto
+		this.list = new JList<>(modelo);
+		// Agrego listener para habilitar el botï¿½n al seleccionar un contacto
 		this.list.addListSelectionListener(e -> {
-		    if (!e.getValueIsAdjusting()) {
-		        btnIniciarConversacion.setEnabled(list.getSelectedIndex() != -1);
-		    }
+			if (!e.getValueIsAdjusting()) {
+				btnIniciarConversacion.setEnabled(list.getSelectedIndex() != -1);
+			}
 		});
 
 		this.scrollPane.setViewportView(this.list);
-		
 
 	}
+
 	public UsuarioDTO getUsuario() {
 		return this.list.getSelectedValue();
 	}
+
 	public void actionPerformed(ActionEvent e) {
 
 	}
-	
+
 	@Override
 	public void setActionListener(ActionListener controlador) {
 		// TODO Auto-generated method stub

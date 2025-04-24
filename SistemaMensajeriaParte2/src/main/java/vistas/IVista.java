@@ -6,10 +6,10 @@ import controlador.Controlador;
 
 public interface IVista {
 
-    void setVisible(boolean b);
+	void setVisible(boolean b);
 
-    void setActionListener(ActionListener controlador);
+	void setActionListener(ActionListener controlador);
 
-    void dispose();
+	void dispose();
 
 }

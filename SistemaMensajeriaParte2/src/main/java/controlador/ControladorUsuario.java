@@ -132,9 +132,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 					((Ventanalogin) this.ventana).deshabilitarBoton();
 				} else {
 					this.sistemaUsuario.iniciarServidor(puerto);
-					// en 3er parametro NO VA IPLOCAL iria ip que recibe de
-					// vista pero tenemos que hacerlo
-					setUser(ventanalogin.getUsuario(), puerto, Util.IPLOCAL);
+					setUser(ventanalogin.getUsuario(), puerto, ventanalogin.getIP());
 					this.ventana.setVisible(false);
 					this.setVentana(new VentanaPrincipal(this));
 					((VentanaPrincipal) ventana).TitulonameUsuario(ventanalogin.getUsuario());
@@ -179,23 +177,23 @@ public class ControladorUsuario implements ActionListener, Observer {
 			}
 			break;
 		case Util.CTEAGREGAR:
-			if (this.ventana2 instanceof VentanaAgregarContacto) {
-				VentanaAgregarContacto ventanaAgregar = (VentanaAgregarContacto) this.ventana2;
+			if (this.ventana2 instanceof VentanaDirectorio) {
+				VentanaDirectorio ventanaAgregar = (VentanaDirectorio) this.ventana2;
 				String nick = ventanaAgregar.getNickname();
 				String ip = ventanaAgregar.getIp();
 				puerto = Integer.parseInt(ventanaAgregar.getPuerto());
 				int nroCondicionAgregado = this.agregaContacto(nick, ip, puerto);
 				if (nroCondicionAgregado == 3) {
-					((VentanaAgregarContacto) ventana2).mostrarConfirmacionContactoAgregado();
+					((VentanaDirectorio) ventana2).mostrarConfirmacionContactoAgregado();
 					ventana2.dispose(); // cerrar la ventana luego de agregar
 				} else {
 					if (nroCondicionAgregado == 2) {
-						((VentanaAgregarContacto) ventana2).mostrarErrorContactoYaAgendado();
+						((VentanaDirectorio) ventana2).mostrarErrorContactoYaAgendado();
 					} else {
-						((VentanaAgregarContacto) ventana2).mostrarErrorUsuarioNoDisponible();
+						((VentanaDirectorio) ventana2).mostrarErrorUsuarioNoDisponible();
 					}
-					((VentanaAgregarContacto) ventana2).vaciarTextFieldPuerto();
-					((VentanaAgregarContacto) ventana2).deshabilitarBoton();
+					((VentanaDirectorio) ventana2).vaciarTextFieldPuerto();
+					((VentanaDirectorio) ventana2).deshabilitarBoton();
 				}
 			}
 			break;

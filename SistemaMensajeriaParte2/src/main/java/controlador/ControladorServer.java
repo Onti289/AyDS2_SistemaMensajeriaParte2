@@ -8,7 +8,7 @@ import java.util.Observer;
 import modeloNegocio.*;
 import util.Util;
 import vistas.IVista;
-import vistas.VentanaAgregarContacto;
+import vistas.VentanaDirectorio;
 import vistas.Ventanalogin;
 
 public class ControladorServer implements ActionListener, Observer{
@@ -24,7 +24,7 @@ public class ControladorServer implements ActionListener, Observer{
 		if (arg instanceof Solicitud) {
 			Solicitud solicitud=(Solicitud)arg;
 			if(solicitud.getTipo()==Util.SOLICITA_LISTA_USUARIO) {
-				this.ventana = new VentanaAgregarContacto(this);
+				this.ventana = new VentanaDirectorio(this);
 				this.ventana.setVisible(true);
 				this.ventana.setActionListener(this);
 			}

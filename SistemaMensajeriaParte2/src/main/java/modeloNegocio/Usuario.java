@@ -1,17 +1,11 @@
 package modeloNegocio;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
-
-import dto.MensajeDTO;
-import dto.UsuarioDTO;
+import java.util.*;
+import dto.*;
 import util.*;
 
+@SuppressWarnings("serial")
 public class Usuario implements Serializable {
 	private String nickName;
 	private String ip;

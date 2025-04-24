@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.PriorityQueue;
+
 import dto.MensajeDTO;
 import dto.UsuarioDTO;
 import modeloNegocio.*;
 import util.Util;
 import vistas.*;
 
-@SuppressWarnings("deprecation")
 public class Controlador implements ActionListener, Observer {
 	protected IVista ventana;
 	protected IVista ventana2;

@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controlador.ControladorUsuario;
-import controlador.ControladorServer;
 import util.Util;
 
 import java.awt.GridLayout;
@@ -39,7 +38,7 @@ public class VentanaDirectorio extends JFrame implements IVista, ActionListener,
 	private JTextField textFieldPuerto;
 	private JTextField textFieldIP;
 	private JTextField textFieldNickname;
-	private ControladorServer controladorServer;
+	private ControladorUsuario controladorUsuario;
 
 	/**
 	 * Launch the application.
@@ -48,8 +47,8 @@ public class VentanaDirectorio extends JFrame implements IVista, ActionListener,
 	/**
 	 * Create the frame.
 	 */
-	public VentanaDirectorio(ControladorServer constroladorServer) {
-		this.controladorServer = constroladorServer;
+	public VentanaDirectorio(ControladorUsuario constroladorUsuario) {
+		this.controladorUsuario = controladorUsuario;
 		setTitle("Agregar contacto");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

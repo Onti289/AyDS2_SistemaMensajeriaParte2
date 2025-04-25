@@ -4,18 +4,25 @@ import java.io.Serializable;
 
 public class Solicitud implements Serializable {
 	private String tipoSolicitud; // Ej: "OBTENER_USUARIOS"
-	private Usuario usuario;
+	private int puerto;
+	private String ip;
 
-	public Solicitud(Usuario usuario, String tipo) {
+	public Solicitud(int puerto, String ip,String tipo) {
 		this.tipoSolicitud = tipo;
-		this.usuario = usuario;
+		this.puerto = puerto;
+		this.ip=ip;
+	}
+	
+	public int getPuerto() {
+		return puerto;
 	}
 
-	public String getTipo() {
+	public String getIp() {
+		return ip;
+	}
+
+	public String getTipoSolicitud() {
 		return tipoSolicitud;
 	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
+	
 }

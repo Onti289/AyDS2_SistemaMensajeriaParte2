@@ -38,7 +38,7 @@ public class SistemaUsuario extends Observable {
 	public void CargarDirectorio() {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-			Solicitud solicitud = new Solicitud(this.usuario, Util.SOLICITA_LISTA_USUARIO);
+			Solicitud solicitud = new Solicitud(this.usuario.getPuerto(),this.usuario.getIp(), Util.SOLICITA_LISTA_USUARIO);
 			oos.writeObject(solicitud);
 			oos.flush();
 			oos.close();
@@ -108,6 +108,16 @@ public class SistemaUsuario extends Observable {
 								if (recibido instanceof ContactoDTO) {
 									ContactoDTO contactoDTO = (ContactoDTO) recibido;
 
+								}
+								else {
+									if(recibido instanceof List<?>) {
+										List<?> lista = (List<?>) recibido;
+									    if (!lista.isEmpty() && lista.get(0) instanceof UsuarioDTO) {
+									        List<UsuarioDTO> usuarios = (List<UsuarioDTO>) lista;
+									    }
+									    setChanged(); // importante
+										notifyObservers(lista);
+									}
 								}
 							}
 						}

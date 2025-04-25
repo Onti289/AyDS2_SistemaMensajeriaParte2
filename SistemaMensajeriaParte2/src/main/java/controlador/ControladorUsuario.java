@@ -256,5 +256,11 @@ public class ControladorUsuario implements ActionListener, Observer {
 			String mensaje = ((IOException) arg).getMessage();
 			((VentanaPrincipal) ventana).mostrarErrorEnvioMensaje(mensaje);
 		}
+		else {
+			if(arg instanceof List<?>) {
+				//Aca hacer que vista con algun metodo tome esa lista
+				//y lo muestre por pantalla
+			}
+		}
 	}
 }

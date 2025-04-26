@@ -22,7 +22,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 	protected SistemaUsuario sistemaUsuario;
 
 	public ControladorUsuario(SistemaUsuario sistemaUsuario) {
-		this.ventana = new Ventanalogin(this);
+		this.ventana = new VentanaRegistrarse(this);
 		ventana.setVisible(true);
 		this.sistemaUsuario = sistemaUsuario;
 		this.ventana.setActionListener(this);
@@ -123,13 +123,13 @@ public class ControladorUsuario implements ActionListener, Observer {
 		switch (e.getActionCommand()) {
 		case Util.CTEREGISTRAR:
 
-			if (this.ventana instanceof Ventanalogin) {
-				Ventanalogin ventanalogin = (Ventanalogin) this.ventana;
+			if (this.ventana instanceof VentanaRegistrarse) {
+				VentanaRegistrarse ventanalogin = (VentanaRegistrarse) this.ventana;
 				puerto = Integer.parseInt(ventanalogin.getPuerto());
 				if (!this.sistemaUsuario.puertoDisponible(puerto)) {
-					((Ventanalogin) this.ventana).muestraErrorPuertoEnUso();
-					((Ventanalogin) this.ventana).vaciarTextFieldPuerto();
-					((Ventanalogin) this.ventana).deshabilitarBoton();
+					((VentanaRegistrarse) this.ventana).muestraErrorPuertoEnUso();
+					((VentanaRegistrarse) this.ventana).vaciarTextFieldPuerto();
+					((VentanaRegistrarse) this.ventana).deshabilitarBoton();
 				} else {
 					this.sistemaUsuario.iniciarServidor(puerto);
 					setUser(ventanalogin.getUsuario(), puerto, ventanalogin.getIP());
@@ -144,7 +144,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 			this.sistemaUsuario.CargarDirectorio();
 			break;
 		case Util.CTENUEVACONVER:
-			this.setVentana2(new VentanaContactos(this));
+			this.setVentana2(new VentanaDirectorio(this));
 
 			break;
 		case Util.CTEENVIAR:
@@ -157,8 +157,8 @@ public class ControladorUsuario implements ActionListener, Observer {
 			}
 			break;
 		case Util.CTEINICIARCONVERSACION:
-			if (this.ventana2 instanceof VentanaContactos) {
-				VentanaContactos ventanaContactos = (VentanaContactos) this.ventana2;
+			if (this.ventana2 instanceof VentanaDirectorio) {
+				VentanaDirectorio ventanaContactos = (VentanaDirectorio) this.ventana2;
 
 				UsuarioDTO contacto = ventanaContactos.getUsuario();
 				this.cargaChat(contacto.getPuerto(), contacto.getIp());

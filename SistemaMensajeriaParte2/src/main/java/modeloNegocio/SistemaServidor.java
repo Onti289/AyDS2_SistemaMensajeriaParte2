@@ -18,7 +18,6 @@ public class SistemaServidor   {
 	private ArrayList<Usuario> listaConectados;
 	private static SistemaServidor servidor_instancia = null;
 
-
 	private SistemaServidor() {
 
 	}
@@ -50,15 +49,16 @@ public class SistemaServidor   {
 	}
 
 	public void iniciaServidor() {
+		Thread serverThread = new Thread(() -> {
 		try (ServerSocket serverSocket = new ServerSocket(Util.PUERTO_SERVIDOR)) {
 			while (true) {
+				
 				Socket clienteSocket = serverSocket.accept();
 				System.out.println("Cliente conectado desde " + clienteSocket.getInetAddress());
-
-				// Manejamos la recepción en un nuevo hilo (opcional pero recomendable)
-				new Thread(() -> {
+				
 					try (ObjectInputStream ois = new ObjectInputStream(clienteSocket.getInputStream())) {
 						Object recibido = ois.readObject();
+						System.out.println("LLEga a servereee");
 						if (recibido instanceof UsuarioDTO) {
 							UsuarioDTO usuario = (UsuarioDTO) recibido;
 							System.out.println(usuario.toString());
@@ -75,12 +75,17 @@ public class SistemaServidor   {
 					} catch (Exception e) {
 						System.err.println("Error al procesar solicitud del cliente: " + e.getMessage());
 					}
-				}).start();
-			}
+					//clienteSocket.close();
+				}
 		} catch (Exception e) {
 			System.err.println("Error en el servidor central: " + e.getMessage());
+			//cerrarServidor();
 		}
+		});
+		serverThread.start();
 	}
+
+
 	private void retornaLista(String ip,int puerto) {
 			try (Socket socket = new Socket(ip,puerto)) {
 				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());	

@@ -10,7 +10,7 @@ public class MainServidor {
 		// TODO Auto-generated method stub
 		SistemaServidor servidor = SistemaServidor.get_Instancia();
 		servidor.iniciaServidor();
-		IVista ventanaServidor= new VentanaServidor();
+		VentanaServidor ventanaServidor= new VentanaServidor();
 	}
 
 }

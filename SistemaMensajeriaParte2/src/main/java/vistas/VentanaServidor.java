@@ -1,19 +1,21 @@
 package vistas;
 
 import javax.swing.*;
+
+import modeloNegocio.SistemaServidor;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class VentanaServidor extends JFrame implements IVista {
+public class VentanaServidor extends JFrame {
 
     private JLabel etiquetaEstado;
-
     public VentanaServidor() {
         setTitle("Servidor");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // No cerrar directamente
         setSize(300, 200);
         setLocationRelativeTo(null); // Centrar la ventana
-
+        
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new GridBagLayout());
         getContentPane().add(panelPrincipal);
@@ -21,6 +23,7 @@ public class VentanaServidor extends JFrame implements IVista {
         etiquetaEstado = new JLabel("Servidor en funcionamiento");
         etiquetaEstado.setFont(new Font("Arial", Font.PLAIN, 14));
         panelPrincipal.add(etiquetaEstado);
+    
         setVisible(true);
     }
 
@@ -29,11 +32,7 @@ public class VentanaServidor extends JFrame implements IVista {
         super.setVisible(b);
     }
 
-    @Override
-    public void setActionListener(ActionListener controlador) {
-        // Esta ventana no tiene botones, así que no es necesario.
-    }
-
+    
     @Override
     public void dispose() {
         super.dispose();

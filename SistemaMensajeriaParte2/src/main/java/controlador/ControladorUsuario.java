@@ -44,6 +44,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 	}
 
 	public void setUser(String nickName, int puerto, String ip) {
+		
 		this.sistemaUsuario.RegistrarUsuarioEnServidor(nickName, puerto, ip);
 		/*
 		this.ventana.setVisible(false);

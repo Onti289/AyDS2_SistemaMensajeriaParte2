@@ -174,16 +174,17 @@ public class SistemaUsuario extends Observable {
 	}
 
 	public void RegistrarUsuarioEnServidor(String nickName, int puerto, String ip) {
-		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) {
-			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-			UsuarioDTO usuariodto = new UsuarioDTO(nickName, puerto, ip);
-			System.out.println("Puerto disponible:");
-			System.out.println(usuariodto.getPuerto());
-			oos.writeObject(usuariodto);
-			oos.flush();
-			oos.close();
-		} catch (IOException e) {
-
+		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) { 
+		    ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+		    UsuarioDTO usuariodto = new UsuarioDTO(nickName, puerto, ip);
+		    System.out.println("Puerto disponible:");
+		    System.out.println(usuariodto.getPuerto());
+		    oos.writeObject(usuariodto);
+		    oos.flush();
+		    oos.close();
+		    System.out.println("gggggg");	
+		}
+		catch (IOException e) {
 		}
 	}
 

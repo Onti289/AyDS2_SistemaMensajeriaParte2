@@ -46,7 +46,6 @@ public class VentanaRegistrarse extends JFrame implements IVista, ActionListener
 		setBounds(100, 100, 308, 227);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(new GridLayout(4, 2, 0, 0));
 
@@ -57,48 +56,74 @@ public class VentanaRegistrarse extends JFrame implements IVista, ActionListener
 		JLabel label_NickName = new JLabel("NickName:");
 		label_NickName.setBounds(90, 13, 86, 20);
 		panel_nickName.add(label_NickName);
-		
+
 		textFieldUsuario = new JTextField();
 		textFieldUsuario.setBounds(150, 13, 86, 20);
-		panel_nickName.add(textFieldUsuario);
 		textFieldUsuario.setColumns(10);
+		textFieldUsuario.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyReleased(KeyEvent e) {
+		        validarCampos();
+		    }
+		});
+		panel_nickName.add(textFieldUsuario);
 
 		JPanel panel_IP = new JPanel();
 		contentPane.add(panel_IP);
 		panel_IP.setLayout(null);
-		
+
 		JLabel label_IP = new JLabel("IP:");
 		label_IP.setBounds(125, 13, 86, 20);
 		panel_IP.add(label_IP);
-		
+
 		textFieldIP = new JTextField();
 		textFieldIP.setText(Util.IPLOCAL);
 		textFieldIP.setBounds(150, 13, 86, 20);
 		textFieldIP.setColumns(10);
+		textFieldIP.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyReleased(KeyEvent e) {
+		        validarCampos();
+		    }
+		});
 		panel_IP.add(textFieldIP);
-		
+
 		JPanel panel_Puerto = new JPanel();
 		contentPane.add(panel_Puerto);
 		panel_Puerto.setLayout(null);
-		
+
 		JLabel label_Puerto = new JLabel("Puerto(1024<P<65536):");
 		label_Puerto.setBounds(35, 13, 112, 20);
 		panel_Puerto.add(label_Puerto);
-		
+
 		textFieldPuerto = new JTextField();
 		textFieldPuerto.setBounds(150, 13, 86, 20);
 		textFieldPuerto.setColumns(10);
+		textFieldPuerto.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyTyped(KeyEvent e) {
+		        char c = e.getKeyChar();
+		        if (!Character.isDigit(c)) {
+		            e.consume();
+		        }
+		    }
+		    @Override
+		    public void keyReleased(KeyEvent e) {
+		        validarCampos();
+		    }
+		});
 		panel_Puerto.add(textFieldPuerto);
-		
+
 		JPanel panel_Registrarse = new JPanel();
 		contentPane.add(panel_Registrarse);
-		
+
 		this.botonRegistrar = new JButton("Registrar");
 		this.botonRegistrar.setToolTipText("Registrar");
-		this.botonRegistrar.setEnabled(false);
+		this.botonRegistrar.setEnabled(false); // Inicialmente deshabilitado
 		this.botonRegistrar.setActionCommand(Util.CTEREGISTRAR);
 		panel_Registrarse.add(this.botonRegistrar);
 	}
+
 
 	// Lo de abajo posiblemente se borra
 	public String getUsuario() {

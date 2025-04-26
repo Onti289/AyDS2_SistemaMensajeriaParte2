@@ -44,11 +44,13 @@ public class ControladorUsuario implements ActionListener, Observer {
 	}
 
 	public void setUser(String nickName, int puerto, String ip) {
-		this.sistemaUsuario.pedirListaUsuario(puerto, ip);
+		this.sistemaUsuario.RegistrarUsuarioEnServidor(nickName, puerto, ip);
+		/*
 		this.ventana.setVisible(false);
 		this.setVentana(new VentanaPrincipal(this));
 		this.ventana.setVisible(true);
 		this.ventana.setActionListener(this);
+		*/
 	}
 
 	public String getNickNamePuerto() {
@@ -147,12 +149,14 @@ public class ControladorUsuario implements ActionListener, Observer {
 					((VentanaRegistrarse) this.ventana).vaciarTextFieldPuerto();
 					((VentanaRegistrarse) this.ventana).deshabilitarBoton();
 				} else {
-
+		
 					this.sistemaUsuario.iniciarServidor(puerto);
 					setUser(ventanaRegistrarse.getUsuario(), puerto, ventanaRegistrarse.getIP());
+					/*
 					this.ventana.setVisible(false);
 					this.setVentana(new VentanaPrincipal(this));
 					((VentanaPrincipal) ventana).TitulonameUsuario(ventanaRegistrarse.getUsuario());
+				*/
 				}
 			}
 
@@ -270,9 +274,18 @@ public class ControladorUsuario implements ActionListener, Observer {
 			((VentanaPrincipal) ventana).mostrarErrorEnvioMensaje(mensaje);
 		}
 		else {
-			if(arg instanceof List<?>) {
-				//Aca hacer que vista con algun metodo tome esa lista
-				//y lo muestre por pantalla
+			if(arg instanceof UsuarioDTO) { //pudo registrar a usuario
+
+				UsuarioDTO usuarioDTO=(UsuarioDTO)arg;
+				this.ventana.setVisible(false);
+				this.setVentana(new VentanaPrincipal(this));
+				((VentanaPrincipal) ventana).TitulonameUsuario(usuarioDTO.getNombre());
+			}
+			else {
+				if(arg instanceof List<?>) {
+					//Aca hacer que vista con algun metodo tome esa lista
+					//y lo muestre por pantalla
+				}
 			}
 		}
 	}

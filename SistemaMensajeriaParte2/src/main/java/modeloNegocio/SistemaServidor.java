@@ -17,7 +17,7 @@ public class SistemaServidor   {
 	private ArrayList<Usuario> listaUsuarios;
 	private ArrayList<Usuario> listaConectados;
 	private static SistemaServidor servidor_instancia = null;
-	private static final int puerto = Util.PUERTO_SERVIDOR;
+
 
 	private SistemaServidor() {
 
@@ -50,7 +50,7 @@ public class SistemaServidor   {
 	}
 
 	public void iniciaServidor() {
-		try (ServerSocket serverSocket = new ServerSocket(this.puerto)) {
+		try (ServerSocket serverSocket = new ServerSocket(Util.PUERTO_SERVIDOR)) {
 			while (true) {
 				Socket clienteSocket = serverSocket.accept();
 				System.out.println("Cliente conectado desde " + clienteSocket.getInetAddress());
@@ -61,6 +61,7 @@ public class SistemaServidor   {
 						Object recibido = ois.readObject();
 						if (recibido instanceof UsuarioDTO) {
 							UsuarioDTO usuario = (UsuarioDTO) recibido;
+							System.out.println(usuario.toString());
 							registrarUsuario(usuario);
 							enviaUsuarioRegistrado(usuario);
 						} else {// entra si lo que recibe en vez de usuario es mensaje

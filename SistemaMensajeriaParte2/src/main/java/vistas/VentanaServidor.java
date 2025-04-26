@@ -21,6 +21,7 @@ public class VentanaServidor extends JFrame implements IVista {
         etiquetaEstado = new JLabel("Servidor en funcionamiento");
         etiquetaEstado.setFont(new Font("Arial", Font.PLAIN, 14));
         panelPrincipal.add(etiquetaEstado);
+        setVisible(true);
     }
 
     @Override

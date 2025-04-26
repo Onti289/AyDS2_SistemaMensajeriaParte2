@@ -35,10 +35,10 @@ public class SistemaUsuario extends Observable {
 		return this.usuario.getPuerto();
 	}
 
-	public void pedirListaUsuarios(int puerto, String ip) {
+	public void pedirListaUsuarios() {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-			Solicitud solicitud = new Solicitud(puerto,ip, Util.SOLICITA_LISTA_USUARIO);
+			Solicitud solicitud = new Solicitud(this.getPuerto(),this.getUsuario().getIp(), Util.SOLICITA_LISTA_USUARIO);
 			oos.writeObject(solicitud);
 			oos.flush();
 			oos.close();
@@ -103,7 +103,10 @@ public class SistemaUsuario extends Observable {
 						} else {// si llega aca es por que el server lo pudo registrar
 							if (recibido instanceof UsuarioDTO) {
 								UsuarioDTO usuariodto = (UsuarioDTO) recibido;
+								System.out.println(usuariodto.toString());
 								setUsuario(usuariodto.getNombre(), usuariodto.getPuerto(), usuariodto.getIp());
+								setChanged(); // importante
+								notifyObservers(usuariodto);
 							} else {
 								if (recibido instanceof ContactoDTO) {
 									ContactoDTO contactoDTO = (ContactoDTO) recibido;
@@ -174,6 +177,8 @@ public class SistemaUsuario extends Observable {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			UsuarioDTO usuariodto = new UsuarioDTO(nickName, puerto, ip);
+			System.out.println("Puerto disponible:");
+			System.out.println(usuariodto.getPuerto());
 			oos.writeObject(usuariodto);
 			oos.flush();
 			oos.close();

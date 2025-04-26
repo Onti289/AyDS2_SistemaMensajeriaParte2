@@ -40,7 +40,7 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 	 */
 	public VentanaLogin(ControladorUsuario controlador) {
 		this.controlador = controlador;
-		setTitle("Sistema de mensajer a");
+		setTitle("Inicio de sesion");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 308, 227);

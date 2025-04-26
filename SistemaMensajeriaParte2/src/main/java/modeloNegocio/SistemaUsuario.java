@@ -35,10 +35,10 @@ public class SistemaUsuario extends Observable {
 		return this.usuario.getPuerto();
 	}
 
-	public void CargarDirectorio() {
+	public void pedirListaUsuarios(int puerto, String ip) {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-			Solicitud solicitud = new Solicitud(this.usuario.getPuerto(),this.usuario.getIp(), Util.SOLICITA_LISTA_USUARIO);
+			Solicitud solicitud = new Solicitud(puerto,ip, Util.SOLICITA_LISTA_USUARIO);
 			oos.writeObject(solicitud);
 			oos.flush();
 			oos.close();
@@ -60,10 +60,10 @@ public class SistemaUsuario extends Observable {
 	}
 
 	public int agregarContacto(String nickName, String ip, int puerto) {
-		int condicion = 2; // contacto ya agendado
+		int condicion = 1; // contacto ya agendado
 		if (!existeContactoPorNombre(this.usuario.getAgenda(), nickName)) {
 			this.usuario.agregaContacto(new Usuario(nickName, puerto, ip));
-			condicion = 3;
+			condicion = 2;
 		}
 		return condicion;
 	}

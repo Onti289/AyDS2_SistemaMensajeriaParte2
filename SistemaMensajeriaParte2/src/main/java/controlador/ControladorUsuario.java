@@ -22,7 +22,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 	protected SistemaUsuario sistemaUsuario;
 
 	public ControladorUsuario(SistemaUsuario sistemaUsuario) {
-		this.ventana = new VentanaRegistrarse(this);
+		this.ventana = new VentanaInicial();
 		ventana.setVisible(true);
 		this.sistemaUsuario = sistemaUsuario;
 		this.ventana.setActionListener(this);
@@ -44,7 +44,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 	}
 
 	public void setUser(String nickName, int puerto, String ip) {
-		this.sistemaUsuario.RegistrarUsuarioEnServidor(nickName, puerto, ip);
+		this.sistemaUsuario.pedirListaUsuario(puerto, ip);
 		this.ventana.setVisible(false);
 		this.setVentana(new VentanaPrincipal(this));
 		this.ventana.setVisible(true);
@@ -90,11 +90,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 	public int agregaContacto(String nickName, String ip, int puerto) {
 		int nroCondicionAgregado;
 		// Si puerto esta disponible es por que no existe ningun usuario con ese puerto
-		if (this.sistemaUsuario.puertoDisponible(puerto))
-			nroCondicionAgregado = 1;
-		else {
-			nroCondicionAgregado = this.sistemaUsuario.agregarContacto(nickName, ip, puerto);
-		}
+
+		nroCondicionAgregado = this.sistemaUsuario.agregarContacto(nickName, ip, puerto);
+		
 		return nroCondicionAgregado;
 	}
 
@@ -121,27 +119,46 @@ public class ControladorUsuario implements ActionListener, Observer {
 		// TODO Auto-generated method stub
 		int puerto;
 		switch (e.getActionCommand()) {
+		
+		//llega aca cuado apreta boton registro en VentanaInicial
+		case Util.CTEREGISTRO:
+			if (this.ventana instanceof VentanaInicial) {
+				this.ventana.setVisible(false);
+				this.setVentana(new VentanaRegistrarse(this));
+				
+			}
+			
+			break;
+		case Util.CTEINICIARSESION:
+			if (this.ventana instanceof VentanaInicial) {
+				this.ventana.setVisible(false);
+				this.setVentana(new VentanaLogin(this));
+				
+			}
+			break;
+		//llega aca cuando apreta boton registrar en VentanaRegistrarse
 		case Util.CTEREGISTRAR:
 
 			if (this.ventana instanceof VentanaRegistrarse) {
-				VentanaRegistrarse ventanalogin = (VentanaRegistrarse) this.ventana;
-				puerto = Integer.parseInt(ventanalogin.getPuerto());
+				VentanaRegistrarse ventanaRegistrarse = (VentanaRegistrarse) this.ventana;
+				puerto = Integer.parseInt(ventanaRegistrarse.getPuerto());
 				if (!this.sistemaUsuario.puertoDisponible(puerto)) {
 					((VentanaRegistrarse) this.ventana).muestraErrorPuertoEnUso();
 					((VentanaRegistrarse) this.ventana).vaciarTextFieldPuerto();
 					((VentanaRegistrarse) this.ventana).deshabilitarBoton();
 				} else {
+
 					this.sistemaUsuario.iniciarServidor(puerto);
-					setUser(ventanalogin.getUsuario(), puerto, ventanalogin.getIP());
+					setUser(ventanaRegistrarse.getUsuario(), puerto, ventanaRegistrarse.getIP());
 					this.ventana.setVisible(false);
 					this.setVentana(new VentanaPrincipal(this));
-					((VentanaPrincipal) ventana).TitulonameUsuario(ventanalogin.getUsuario());
+					((VentanaPrincipal) ventana).TitulonameUsuario(ventanaRegistrarse.getUsuario());
 				}
 			}
 
 			break;
 		case Util.CTEAGREGARCONTACTO:
-			this.sistemaUsuario.CargarDirectorio();
+			this.sistemaUsuario.pedirListaUsuarios();
 			break;
 		case Util.CTENUEVACONVER:
 			this.setVentana2(new VentanaDirectorio(this));
@@ -178,22 +195,18 @@ public class ControladorUsuario implements ActionListener, Observer {
 			break;
 		case Util.CTEAGREGAR:
 			if (this.ventana2 instanceof VentanaDirectorio) {
-				VentanaDirectorio ventanaAgregar = (VentanaDirectorio) this.ventana2;
-				String nick = ventanaAgregar.getNickname();
-				String ip = ventanaAgregar.getIp();
-				puerto = Integer.parseInt(ventanaAgregar.getPuerto());
-				int nroCondicionAgregado = this.agregaContacto(nick, ip, puerto);
-				if (nroCondicionAgregado == 3) {
+				VentanaDirectorio ventanaDirectorio = (VentanaDirectorio) this.ventana2;
+				UsuarioDTO usuario = ventanaDirectorio.getUsuario();
+	
+				puerto = usuario.getPuerto();
+				int nroCondicionAgregado = this.agregaContacto(usuario.getNombre(), usuario.getIp(), puerto);
+				if (nroCondicionAgregado == 2) {
 					((VentanaDirectorio) ventana2).mostrarConfirmacionContactoAgregado();
 					ventana2.dispose(); // cerrar la ventana luego de agregar
 				} else {
-					if (nroCondicionAgregado == 2) {
+					if (nroCondicionAgregado == 1) {
 						((VentanaDirectorio) ventana2).mostrarErrorContactoYaAgendado();
-					} else {
-						((VentanaDirectorio) ventana2).mostrarErrorUsuarioNoDisponible();
-					}
-					((VentanaDirectorio) ventana2).vaciarTextFieldPuerto();
-					((VentanaDirectorio) ventana2).deshabilitarBoton();
+					} 
 				}
 			}
 			break;

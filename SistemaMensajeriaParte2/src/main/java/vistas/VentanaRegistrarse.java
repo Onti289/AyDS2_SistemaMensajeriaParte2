@@ -40,7 +40,7 @@ public class VentanaRegistrarse extends JFrame implements IVista, ActionListener
 	 */
 	public VentanaRegistrarse(ControladorUsuario controlador) {
 		this.controlador = controlador;
-		setTitle("Sistema de mensajer a");
+		setTitle("Registro");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 308, 227);

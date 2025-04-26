@@ -4,6 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import util.Util;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JButton;
@@ -19,7 +22,7 @@ public class VentanaInicial extends JFrame implements IVista, ActionListener {
     private JButton botonInicioSesion;
 
     public VentanaInicial() {
-        setTitle("Sistema de Mensajería");
+        setTitle("Sistema de Mensajeria");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 250);
         setLocationRelativeTo(null);
@@ -28,14 +31,14 @@ public class VentanaInicial extends JFrame implements IVista, ActionListener {
         panelPrincipal.setLayout(new GridLayout(4, 1, 0, 10));
         getContentPane().add(panelPrincipal, BorderLayout.CENTER);
 
-        JLabel titulo = new JLabel("Sistema de Mensajería", JLabel.CENTER);
+        JLabel titulo = new JLabel("Sistema de Mensajeria", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 16));
         panelPrincipal.add(titulo);
 
-        botonRegistro = new JButton("Registro");
+        botonRegistro = new JButton(Util.CTEREGISTRO);
         panelPrincipal.add(botonRegistro);
 
-        botonInicioSesion = new JButton("Inicio de sesión");
+        botonInicioSesion = new JButton(Util.CTEINICIARSESION);
         panelPrincipal.add(botonInicioSesion);
     }
 

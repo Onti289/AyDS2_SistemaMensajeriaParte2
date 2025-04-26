@@ -15,6 +15,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -92,4 +93,16 @@ public class VentanaDirectorio extends JFrame implements IVista, ActionListener 
 		// TODO Auto-generated method stub
 		this.btnAgregarContacto.addActionListener(controlador);
 	}
+	
+	public void mostrarConfirmacionContactoAgregado() {
+        JOptionPane.showMessageDialog(this, "�Contacto agregado exitosamente!", "Registro exitoso",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+	
+	public void mostrarErrorContactoYaAgendado() {
+		JOptionPane.showMessageDialog(this, "El contacto que intent�s agregar ya est� en tu agenda.",
+				"Contacto ya agendado", JOptionPane.ERROR_MESSAGE);
+	}
+	
+
 }

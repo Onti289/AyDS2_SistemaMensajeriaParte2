@@ -19,4 +19,9 @@ public class Util {
 	public static final String CTEINICIARSESION = "Iniciar sesion";
 	public static final String CTELOGIN = "Log in";
 	public static final String CTEREGISTRO = "Registro";
+	public static final String CTEUSUERINEXISTENTE = "Usuario inexistente";
+	public static final String CTEUSUARIOLOGUEADO = "Usuario Logueado";
+	public static final String CTEREGRISTRARSE = "Registrarse";
+	public static final String CTEINICIOSESION = "Inicio sesion";
+	
 }

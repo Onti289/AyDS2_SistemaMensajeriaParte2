@@ -138,28 +138,26 @@ public class ControladorUsuario implements ActionListener, Observer {
 		case Util.CTEREGISTRO:
 			if (this.ventana instanceof VentanaInicial) {
 				this.ventana.setVisible(false);
-				this.setVentana(new VentanaRegistrarse(this));
-				
+				this.setVentana(new VentanaLoginORegistrar(this,Util.CTEREGISTRO,Util.CTEREGRISTRARSE,Util.CTEREGISTRAR));	
 			}
 			
 			break;
 		case Util.CTEINICIARSESION:
 			if (this.ventana instanceof VentanaInicial) {
 				this.ventana.setVisible(false);
-				this.setVentana(new VentanaLogin(this));
-				
+				this.setVentana(new VentanaLoginORegistrar(this,Util.CTEINICIOSESION,Util.CTEINICIARSESION,Util.CTELOGIN));					
 			}
 			break;
 		//llega aca cuando apreta boton registrar en VentanaRegistrarse
 		case Util.CTEREGISTRAR:
 
-			if (this.ventana instanceof VentanaRegistrarse) {
-				VentanaRegistrarse ventanaRegistrarse = (VentanaRegistrarse) this.ventana;
+			if (this.ventana instanceof VentanaLoginORegistrar) {
+				VentanaLoginORegistrar ventanaRegistrarse = (VentanaLoginORegistrar) this.ventana;
 				puerto = Integer.parseInt(ventanaRegistrarse.getPuerto());
 				if (!this.sistemaUsuario.puertoDisponible(puerto)) {
-					((VentanaRegistrarse) this.ventana).muestraErrorPuertoEnUso();
-					((VentanaRegistrarse) this.ventana).vaciarTextFieldPuerto();
-					((VentanaRegistrarse) this.ventana).deshabilitarBoton();
+					((VentanaLoginORegistrar) this.ventana).muestraErrorPuertoEnUso();
+					((VentanaLoginORegistrar) this.ventana).vaciarTextFieldPuerto();
+					((VentanaLoginORegistrar) this.ventana).deshabilitarBoton();
 				} else {
 		
 					this.sistemaUsuario.iniciarServidor(puerto);
@@ -176,13 +174,13 @@ public class ControladorUsuario implements ActionListener, Observer {
 			//llega aca cuando apreta boton iniciar sesion en VentanaRegistrarse
 		case Util.CTELOGIN:
 
-			if (this.ventana instanceof VentanaLogin) {
-				VentanaLogin ventanaLogin = (VentanaLogin) this.ventana;
+			if (this.ventana instanceof VentanaLoginORegistrar) {
+				VentanaLoginORegistrar ventanaLogin = (VentanaLoginORegistrar) this.ventana;
 				puerto = Integer.parseInt(ventanaLogin.getPuerto());
 				if (!this.sistemaUsuario.puertoDisponible(puerto)) {
-					((VentanaLogin) this.ventana).muestraErrorPuertoEnUso();
-					((VentanaLogin) this.ventana).vaciarTextFieldPuerto();
-					((VentanaLogin) this.ventana).deshabilitarBoton();
+					((VentanaLoginORegistrar) this.ventana).muestraErrorPuertoEnUso();
+					((VentanaLoginORegistrar) this.ventana).vaciarTextFieldPuerto();
+					((VentanaLoginORegistrar) this.ventana).deshabilitarBoton();
 				} else {
 		
 					this.sistemaUsuario.iniciarServidor(puerto);
@@ -310,12 +308,25 @@ public class ControladorUsuario implements ActionListener, Observer {
 			((VentanaPrincipal) ventana).mostrarErrorEnvioMensaje(mensaje);
 		}
 		else {
-			if(arg instanceof UsuarioDTO) { //pudo registrar o loguear a usuario
+			if(arg instanceof Solicitud) { //pudo registrar o loguear a usuario
 
-				UsuarioDTO usuarioDTO=(UsuarioDTO)arg;
-				this.ventana.setVisible(false);
-				this.setVentana(new VentanaPrincipal(this));
-				((VentanaPrincipal) ventana).TitulonameUsuario(usuarioDTO.getNombre());
+				Solicitud solicitud=(Solicitud)arg;
+				if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO) || solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {//SI se registro o logueo
+					this.ventana.setVisible(false);
+					this.setVentana(new VentanaPrincipal(this));
+					((VentanaPrincipal) ventana).TitulonameUsuario(solicitud.getNombre());
+				}
+				else { //no se pudo ni registrar ni loguear
+					if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEUSUARIOLOGUEADO)) {
+						((VentanaLoginORegistrar) ventana).mostrarErrorUsuarioYaLogueado();
+					}
+					else {
+						if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEUSUERINEXISTENTE)) {
+							((VentanaLoginORegistrar) ventana).mostrarErrorUsuarioInexistente();
+						}
+					}
+					this.sistemaUsuario.cerrarServidor();
+				}
 			}
 			else {
 				if(arg instanceof List<?>) {

@@ -37,7 +37,7 @@ public class SistemaServidor   {
 		return false;
 	}
 
-	private void enviaUsuario(UsuarioDTO usuario) {
+	private void enviaRespuestaUsuario(Solicitud usuario) {
 		try (Socket socket = new Socket(usuario.getIp(), usuario.getPuerto())) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			oos.writeObject(usuario);
@@ -76,15 +76,33 @@ public class SistemaServidor   {
 									if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRAR)){
 										System.out.println("Registrooooooo");
 										UsuarioDTO usuario = solicitud.getUsuarioDTO();
-										registrarUsuario(usuario);
-										enviaUsuario(usuario);
+										if(registrarUsuario(usuario)) {
+											solicitud.setTipoSolicitud(Util.CTEREGISTRO);
+										}
+										else {
+											solicitud.setTipoSolicitud(Util.CTEUSUARIOLOGUEADO);
+										}
+										enviaRespuestaUsuario(solicitud);
 									}
 									else
 										if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
 											System.out.println("Loginnnnn");
 											UsuarioDTO usuario = solicitud.getUsuarioDTO();
-											loginUsuario(usuario);
-											enviaUsuario(usuario);
+											int tipo=loginUsuario(usuario);
+											if(tipo==1) {
+												solicitud.setTipoSolicitud(Util.CTEUSUARIOLOGUEADO);
+											}
+											else {
+												//usuario Existe pero esta logueado
+												if(tipo==2) {
+													solicitud.setTipoSolicitud(Util.CTEUSUARIOLOGUEADO);
+												}
+												else {
+													solicitud.setTipoSolicitud(Util.CTEUSUERINEXISTENTE);
+												}
+												
+											}
+											enviaRespuestaUsuario(solicitud);
 										}
 							}
 						
@@ -100,7 +118,6 @@ public class SistemaServidor   {
 		});
 		serverThread.start();
 	}
-
 
 	private void retornaLista(String ip,int puerto) {
 			try (Socket socket = new Socket(ip,puerto)) {
@@ -130,12 +147,17 @@ public class SistemaServidor   {
 		return false;
 	}
 	
-	public void registrarUsuario(UsuarioDTO usuario) {
-
-		if (!existeUsuarioPorNombre(usuario.getNombre()))
-			this.listaUsuarios.add(new Usuario(usuario.getNombre(), usuario.getPuerto(),usuario.getIp()));
-		// else
-		// lanzar una exepcion nicknameExistenteException
+	public boolean registrarUsuario(UsuarioDTO usuariodto) {
+		boolean registro=true;
+		if (!existeUsuarioPorNombre(usuariodto.getNombre())) {
+			Usuario usuario=new Usuario(usuariodto.getNombre(), usuariodto.getPuerto(),usuariodto.getIp());
+			this.listaUsuarios.add(usuario);
+			this.listaConectados.add(usuario);
+		}
+		else {
+			registro=false;
+		 }
+		return registro;
 	}
 
 	public boolean estaConectado(String nickName) {
@@ -155,15 +177,22 @@ public class SistemaServidor   {
 		}
 		return false;
 	}
-
-	public void loginUsuario(UsuarioDTO usuario) {
+	public int loginUsuario(UsuarioDTO usuario) {
+		int tipo=1;//usuario logueado exitosamente
+		//usuario Existe pero esta logueado
+		if(this.estaConectado(usuario.getNombre())) {
+			tipo=2;
+		}
+		// usuario logueado exitosamente
 		if (this.existeUsuarioPorNombre(usuario.getNombre()) && this.puertoEIpCorrecto(usuario.getNombre(), usuario.getPuerto(), usuario.getIp())
 				&& !this.estaConectado(usuario.getNombre())) {
 			listaConectados.add(new Usuario(usuario.getNombre(), usuario.getPuerto(), usuario.getIp()));
 		}
-		// usuario logueado exitosamente
-		// else
-		// usuarioInexistente o ya logueado
+		else {// usuarioInexistente 
+			tipo=3;
+		}	
+		return tipo;
+		
 	}
 
 }

@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 
-public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyListener {
+public class VentanaLoginORegistrar extends JFrame implements IVista, ActionListener, KeyListener {
 
 	/**
 	 * 
@@ -29,7 +29,7 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 	private JTextField textFieldPuerto;
 	private JTextField textFieldUsuario;
 	private JTextField textFieldIP;
-	private JButton botonLogin;
+	private JButton boton;
 
 	/**
 	 * Launch the application.
@@ -38,9 +38,9 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 	/**
 	 * Create the frame.
 	 */
-	public VentanaLogin(ControladorUsuario controlador) {
+	public VentanaLoginORegistrar(ControladorUsuario controlador,String titulo,String nombreBoton,String nombreAccion) {
 		this.controlador = controlador;
-		setTitle("Inicio de sesion");
+		setTitle(titulo);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 308, 227);
@@ -118,13 +118,13 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 		JPanel panel_Registrarse = new JPanel();
 		contentPane.add(panel_Registrarse);
 		
-		this.botonLogin = new JButton("Iniciar sesion");
-		this.botonLogin.setToolTipText("Iniciar sesion");
-		this.botonLogin.setEnabled(false);
-		this.botonLogin.setActionCommand(Util.CTELOGIN);
-		panel_Registrarse.add(this.botonLogin);
+		this.boton = new JButton(nombreBoton);
+		this.boton.setToolTipText(nombreBoton);
+		this.boton.setEnabled(false);
+		this.boton.setActionCommand(nombreAccion);
+		panel_Registrarse.add(this.boton);
 	}
-
+	
 	// Lo de abajo posiblemente se borra
 	public String getUsuario() {
 		return textFieldUsuario.getText();
@@ -137,23 +137,28 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 	public String getPuerto() {
 		return this.textFieldPuerto.getText();
 	}
-
+	
 	public void muestraErrorPuertoEnUso() {
 		JOptionPane.showMessageDialog(null,
-				"El puerto ingresado ya est  en uso.\nPor favor, eleg  otro puerto entre 1025 y 65535.",
+				"El puerto ingresado ya esta  en uso.\nPor favor, elegi  otro puerto entre 1025 y 65535.",
 				"Error: Puerto en uso", JOptionPane.ERROR_MESSAGE);
-
+		refrescaPantalla();
 	}
 
 	public void vaciarTextFieldPuerto() {
 		this.textFieldPuerto.setText("");
 	}
-
-	public void deshabilitarBoton() {
-		this.botonLogin.setEnabled(false);
-		
+	public void vaciarTextFieldNickName() {
+		this.textFieldUsuario.setText("");
 	}
-	
+	public void deshabilitarBoton() {
+		this.boton.setEnabled(false);	
+	}
+	public void refrescaPantalla() {
+		deshabilitarBoton();
+	    vaciarTextFieldPuerto();
+	    vaciarTextFieldNickName();
+	}
 	private void validarCampos() {
 		String usuario = getUsuario();
 		String IP = getIP();
@@ -167,10 +172,30 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 			habilitar = false;
 		}
 
-		this.botonLogin.setEnabled(habilitar);
+		this.boton.setEnabled(habilitar);
+	}
+	//metodo para pantalla login o registro
+	public void mostrarErrorUsuarioYaLogueado() {
+	    JOptionPane.showMessageDialog(
+	        this,
+	        "El usuario ya se encuentra logueado. Intente con otro usuario.",
+	        "Error de Login",
+	        JOptionPane.ERROR_MESSAGE
+	    );
+	    refrescaPantalla(); 
 	}
 
-
+	//metodo para pantallaLogin
+	public void mostrarErrorUsuarioInexistente() {
+	    JOptionPane.showMessageDialog(
+	        this,
+	        "El usuario ya Inexistente. Intente con otro usuario.",
+	        "Error de Login",
+	        JOptionPane.ERROR_MESSAGE
+	    );
+	    this.boton.setEnabled(false);
+	    refrescaPantalla();
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
@@ -195,7 +220,7 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 	@Override
 	public void setActionListener(ActionListener controlador) {
 		// TODO Auto-generated method stub
-		this.botonLogin.addActionListener(controlador);
+		this.boton.addActionListener(controlador);
 	}
 
 }

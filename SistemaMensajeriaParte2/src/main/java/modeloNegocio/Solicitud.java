@@ -12,7 +12,9 @@ public class Solicitud implements Serializable {
 		this.tipoSolicitud = tipo;
 		this.usuariodto = u;
 	}
-	
+	public String getNombre() {
+		return this.usuariodto.getNombre();
+	}
 	public int getPuerto() {
 		return this.usuariodto.getPuerto();
 	}
@@ -28,5 +30,7 @@ public class Solicitud implements Serializable {
 	public String getTipoSolicitud() {
 		return tipoSolicitud;
 	}
-	
+	public void setTipoSolicitud(String solicitud) {
+		this.tipoSolicitud=solicitud;
+	}
 }

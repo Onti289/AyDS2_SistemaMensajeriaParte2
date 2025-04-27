@@ -16,7 +16,8 @@ import util.Util;
 public class SistemaUsuario extends Observable {
 	private Usuario usuario;
 	private static SistemaUsuario sistema_instancia = null;
-
+	private ServerSocket serverSocket;
+	private volatile boolean servidorActivo;
 	private SistemaUsuario() {
 
 	}
@@ -89,8 +90,10 @@ public class SistemaUsuario extends Observable {
 
 	public void iniciarServidor(int puerto) {
 		Thread serverThread = new Thread(() -> {
-			try (ServerSocket serverSocket = new ServerSocket(puerto)) {
-				while (true) {
+			try {
+				serverSocket = new ServerSocket(puerto);
+	            servidorActivo = true;
+				while (servidorActivo) {
 					Socket socket = serverSocket.accept();
 					try (ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
 						Object recibido = ois.readObject();
@@ -101,12 +104,14 @@ public class SistemaUsuario extends Observable {
 							notifyObservers(mensaje);
 
 						} else {// si llega aca es por que el server lo pudo registrar o loguear
-							if (recibido instanceof UsuarioDTO) {
-								UsuarioDTO usuariodto = (UsuarioDTO) recibido;
-								//System.out.println(usuariodto.toString());
-								setUsuario(usuariodto.getNombre(), usuariodto.getPuerto(), usuariodto.getIp());
+							if (recibido instanceof Solicitud) {
+								Solicitud solicitud = (Solicitud) recibido;
+								//Si registra o loguea lo tiene que crear igual por que inicio de 0 el sistema usuario
+								if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO) ||solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
+									setUsuario(solicitud.getNombre(), solicitud.getPuerto(), solicitud.getIp());
+								}
 								setChanged(); // importante
-								notifyObservers(usuariodto);
+								notifyObservers(solicitud);
 							} else {
 								if (recibido instanceof ContactoDTO) {
 									ContactoDTO contactoDTO = (ContactoDTO) recibido;
@@ -171,6 +176,16 @@ public class SistemaUsuario extends Observable {
 			setChanged(); // importante
 			notifyObservers(error);
 		}
+	}
+	public void cerrarServidor() {
+	    servidorActivo = false;
+	    if (serverSocket != null && !serverSocket.isClosed()) {
+	        try {
+	            serverSocket.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
 
 	public void activaUsuarioEnServidor(String nickName, int puerto, String ip, String tipo) {

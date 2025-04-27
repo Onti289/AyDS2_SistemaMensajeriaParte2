@@ -142,6 +142,26 @@ public class SistemaUsuario extends Observable {
 		serverThread.start();
 	}
 
+	public void medesconecto() {
+		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) { 
+		    ObjectOutputStream oos = null;
+	
+		    oos = new ObjectOutputStream(socket.getOutputStream());
+		    Solicitud soli = new Solicitud (new UsuarioDTO(this.getnickName(), this.getPuerto(),this.getIp()),Util.CTEDESCONEXION);
+		    oos.writeObject(soli);
+		    oos.flush();
+		    oos.close();
+		}
+		catch (IOException e) {
+		}
+	}
+		
+	
+
+	private String getIp() {
+		return this.usuario.getIp();
+	}
+
 	public Usuario buscarUsuarioPorDTO(UsuarioDTO dto) {
 		for (Usuario u : usuario.getAgenda()) {
 			if (u.getPuerto() == dto.getPuerto() && u.getIp() == dto.getIp()) {
@@ -177,16 +197,6 @@ public class SistemaUsuario extends Observable {
 			notifyObservers(error);
 		}
 	}
-	public void cerrarServidor() {
-	    servidorActivo = false;
-	    if (serverSocket != null && !serverSocket.isClosed()) {
-	        try {
-	            serverSocket.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	}
 
 	public void enviaSolicitudAServidor(String nickName, int puerto, String ip, String tipo) {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) { 
@@ -206,7 +216,16 @@ public class SistemaUsuario extends Observable {
 			System.out.println("error");
 		}
 	}
-
+	public void cerrarServidor() {
+	    servidorActivo = false;
+	    if (serverSocket != null && !serverSocket.isClosed()) {
+	        try {
+	            serverSocket.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
 	public static boolean puertoDisponible(int puerto) {
 		try (ServerSocket socket = new ServerSocket(puerto)) {
 			socket.setReuseAddress(true);

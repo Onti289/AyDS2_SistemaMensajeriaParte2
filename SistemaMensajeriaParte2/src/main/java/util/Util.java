@@ -23,5 +23,6 @@ public class Util {
 	public static final String CTEUSUARIOLOGUEADO = "Ya hay una sesion existente para este usuario";
 	public static final String CTEREGRISTRARSE = "Registrarse";
 	public static final String CTEINICIOSESION = "Inicio sesion";
+	public static final String CTEDESCONEXION = "Usuario se desconecta";
 	
 }

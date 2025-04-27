@@ -52,7 +52,7 @@ public class SistemaServidor {
 		Thread serverThread = new Thread(() -> {
 			try (ServerSocket serverSocket = new ServerSocket(Util.PUERTO_SERVIDOR)) {
 				while (true) {
-
+					
 					Socket clienteSocket = serverSocket.accept();
 					System.out.println("Cliente conectado desde " + clienteSocket.getInetAddress());
 
@@ -97,10 +97,15 @@ public class SistemaServidor {
 								}
 								enviaRespuestaUsuario(solicitud);
 							}
+							else {
+								if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEDESCONEXION)) {
+									quitarUsuarioDesconectado(solicitud.getNombre());
+								}
+							}
 						}
 
 					} catch (Exception e) {
-						System.err.println("Error al procesar solicitud del cliente: " + e.getMessage());
+						e.printStackTrace();
 					}
 					clienteSocket.close();
 				}
@@ -111,6 +116,19 @@ public class SistemaServidor {
 		});
 		serverThread.start();
 	}
+
+	private void quitarUsuarioDesconectado(String nombre) {
+	    int nro = 0;
+	    while (nro < this.listaConectados.size()) {
+	        Usuario u = this.listaConectados.get(nro);
+	        if (u.getNickName().equalsIgnoreCase(nombre)) {
+	            this.listaConectados.remove(nro);
+	            break; // Usuario encontrado y eliminado, salimos del bucle
+	        }
+	        nro++;
+	    }
+	}
+
 
 	private void retornaLista(String ip, int puerto) {
 		try (Socket socket = new Socket(ip, puerto)) {
@@ -142,7 +160,7 @@ public class SistemaServidor {
 
 	public boolean registrarUsuario(UsuarioDTO usuariodto) {
 		boolean registro = true;
-		if (!existeUsuarioPorNombre(usuariodto.getNombre())) {
+		if (!existeUsuarioPorNombre(usuariodto.getNombre()) && !puertoEIpEnUso(usuariodto.getIp(),usuariodto.getPuerto())) {
 			Usuario usuario = new Usuario(usuariodto.getNombre(), usuariodto.getPuerto(), usuariodto.getIp());
 			this.listaUsuarios.add(usuario);
 			this.listaConectados.add(usuario);
@@ -151,17 +169,23 @@ public class SistemaServidor {
 		}
 		return registro;
 	}
-
-	public boolean estaConectado(String ip, int puerto) {
-		try (Socket socket = new Socket(ip, puerto)) {
-			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-			oos.writeObject("Estas conectado?");
-			oos.flush();
-			oos.close();
-		} catch (IOException e) {
-			return false;
+	
+	private boolean puertoEIpEnUso(String ip,int puerto) {
+		for(Usuario u: this.listaUsuarios) {
+			if(u.getIp().equalsIgnoreCase(ip) && u.getPuerto()==puerto) {
+				return true;	
+			}
 		}
-		return true;
+		return false;
+	}
+
+	public boolean estaConectado(String nombre) {
+			for(Usuario u : this.listaConectados) {
+				if(u.getNickName().equalsIgnoreCase(nombre)) {
+					return true;
+				}
+			}
+		return false;
 	}
 
 	public boolean puertoEIpCorrecto(String nickName, int puerto, String IP) {
@@ -180,7 +204,7 @@ public class SistemaServidor {
 		String ip     = usuario.getIp();
 		int puerto    = usuario.getPuerto();
 		if (this.existeUsuarioPorNombre(nombre) && this.puertoEIpCorrecto(nombre, puerto,ip )) {
-			if (this.estaConectado(ip, puerto)) {
+			if (this.estaConectado(nombre)) {
 				tipo = 2;
 				// usuario existe pero esta logueado
 			}
@@ -190,4 +214,5 @@ public class SistemaServidor {
 		}
 		return tipo;
 	}
+
 }

@@ -33,7 +33,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 		return ventana;
 	}
 
-	public SistemaUsuario getSistemaMensajeria() {
+	public SistemaUsuario getSistemaUsuario() {
 		return sistemaUsuario;
 	}
 
@@ -308,7 +308,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 				if(arg instanceof List<?>) {
 					List<?> lista = (List<?>) arg;
 					
-					String nombre = this.getSistemaMensajeria().getnickName();
+					String nombre = this.getSistemaUsuario().getnickName();
 				
 					List<UsuarioDTO> listaUsuarios = new ArrayList<>();
 

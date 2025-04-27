@@ -2,25 +2,29 @@ package modeloNegocio;
 
 import java.io.Serializable;
 
+import dto.UsuarioDTO;
+
 public class Solicitud implements Serializable {
 	private String tipoSolicitud; // Ej: "OBTENER_USUARIOS"
-	private int puerto;
-	private String ip;
+	private UsuarioDTO usuariodto;
 
-	public Solicitud(int puerto, String ip,String tipo) {
+	public Solicitud(UsuarioDTO u,String tipo) {
 		this.tipoSolicitud = tipo;
-		this.puerto = puerto;
-		this.ip=ip;
+		this.usuariodto = u;
 	}
 	
 	public int getPuerto() {
-		return puerto;
+		return this.usuariodto.getPuerto();
 	}
 
 	public String getIp() {
-		return ip;
+		return this.usuariodto.getIp();
 	}
 
+	public UsuarioDTO getUsuarioDTO(){
+		return this.usuariodto;
+	}
+	
 	public String getTipoSolicitud() {
 		return tipoSolicitud;
 	}

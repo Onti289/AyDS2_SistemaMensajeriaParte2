@@ -43,9 +43,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 		this.ventana.setVisible(true);
 	}
 
-	public void setUser(String nickName, int puerto, String ip) {
+	public void setUser(String nickName, int puerto, String ip, String tipo) {
 		
-		this.sistemaUsuario.RegistrarUsuarioEnServidor(nickName, puerto, ip);
+		this.sistemaUsuario.activaUsuarioEnServidor(nickName, puerto, ip, tipo);
 		/*
 		this.ventana.setVisible(false);
 		this.setVentana(new VentanaPrincipal(this));
@@ -54,6 +54,17 @@ public class ControladorUsuario implements ActionListener, Observer {
 		*/
 	}
 
+    /*public void setUser(String nickName, int puerto, String ip) {
+		
+		this.sistemaUsuario.//RegistrarUsuarioEnServidor(nickName, puerto, ip);
+		
+		this.ventana.setVisible(false);
+		this.setVentana(new VentanaPrincipal(this));
+		this.ventana.setVisible(true);
+		this.ventana.setActionListener(this);
+		
+	}
+	*/
 	public String getNickNamePuerto() {
 		return "Nickname:" + sistemaUsuario.getnickName() + "\nPuerto:" + sistemaUsuario.getPuerto();
 	}
@@ -152,7 +163,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 				} else {
 		
 					this.sistemaUsuario.iniciarServidor(puerto);
-					setUser(ventanaRegistrarse.getUsuario(), puerto, ventanaRegistrarse.getIP());
+					setUser(ventanaRegistrarse.getUsuario(), puerto, ventanaRegistrarse.getIP(), Util.CTEREGISTRAR);
 					/*
 					this.ventana.setVisible(false);
 					this.setVentana(new VentanaPrincipal(this));
@@ -162,6 +173,30 @@ public class ControladorUsuario implements ActionListener, Observer {
 			}
 
 			break;
+			//llega aca cuando apreta boton iniciar sesion en VentanaRegistrarse
+		case Util.CTELOGIN:
+
+			if (this.ventana instanceof VentanaLogin) {
+				VentanaLogin ventanaLogin = (VentanaLogin) this.ventana;
+				puerto = Integer.parseInt(ventanaLogin.getPuerto());
+				if (!this.sistemaUsuario.puertoDisponible(puerto)) {
+					((VentanaLogin) this.ventana).muestraErrorPuertoEnUso();
+					((VentanaLogin) this.ventana).vaciarTextFieldPuerto();
+					((VentanaLogin) this.ventana).deshabilitarBoton();
+				} else {
+		
+					this.sistemaUsuario.iniciarServidor(puerto);
+					setUser(ventanaLogin.getUsuario(), puerto, ventanaLogin.getIP(), Util.CTELOGIN);
+					/*
+					this.ventana.setVisible(false);
+					this.setVentana(new VentanaPrincipal(this));
+					((VentanaPrincipal) ventana).TitulonameUsuario(ventanaRegistrarse.getUsuario());
+				*/
+				}
+			}
+
+			break;
+
 		case Util.CTEAGREGARCONTACTO:
 			this.sistemaUsuario.pedirListaUsuarios();
 			break;
@@ -275,7 +310,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 			((VentanaPrincipal) ventana).mostrarErrorEnvioMensaje(mensaje);
 		}
 		else {
-			if(arg instanceof UsuarioDTO) { //pudo registrar a usuario
+			if(arg instanceof UsuarioDTO) { //pudo registrar o loguear a usuario
 
 				UsuarioDTO usuarioDTO=(UsuarioDTO)arg;
 				this.ventana.setVisible(false);

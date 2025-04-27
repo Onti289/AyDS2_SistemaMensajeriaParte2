@@ -38,7 +38,7 @@ public class SistemaUsuario extends Observable {
 	public void pedirListaUsuarios() {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-			Solicitud solicitud = new Solicitud(this.getPuerto(),this.getUsuario().getIp(), Util.SOLICITA_LISTA_USUARIO);
+			Solicitud solicitud = new Solicitud(new UsuarioDTO(this.getnickName() ,this.getPuerto(),this.getUsuario().getIp()), Util.SOLICITA_LISTA_USUARIO);
 			oos.writeObject(solicitud);
 			oos.flush();
 			oos.close();
@@ -100,10 +100,10 @@ public class SistemaUsuario extends Observable {
 							setChanged(); // importante
 							notifyObservers(mensaje);
 
-						} else {// si llega aca es por que el server lo pudo registrar
+						} else {// si llega aca es por que el server lo pudo registrar o loguear
 							if (recibido instanceof UsuarioDTO) {
 								UsuarioDTO usuariodto = (UsuarioDTO) recibido;
-								System.out.println(usuariodto.toString());
+								//System.out.println(usuariodto.toString());
 								setUsuario(usuariodto.getNombre(), usuariodto.getPuerto(), usuariodto.getIp());
 								setChanged(); // importante
 								notifyObservers(usuariodto);
@@ -151,7 +151,7 @@ public class SistemaUsuario extends Observable {
 	}
 
 	public void enviarMensajeServidor(UsuarioDTO contacto, String mensaje) {
-		try (Socket socket = new Socket(contacto.getIp(), contacto.getPuerto())) {
+		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			Usuario ureceptor = this.buscarUsuarioPorDTO(contacto);
 			Mensaje msg;
@@ -173,18 +173,22 @@ public class SistemaUsuario extends Observable {
 		}
 	}
 
-	public void RegistrarUsuarioEnServidor(String nickName, int puerto, String ip) {
+	public void activaUsuarioEnServidor(String nickName, int puerto, String ip, String tipo) {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) { 
-		    ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-		    UsuarioDTO usuariodto = new UsuarioDTO(nickName, puerto, ip);
+		    ObjectOutputStream oos = null;
+		    System.out.println(oos);
+		    oos = new ObjectOutputStream(socket.getOutputStream());
+		    System.out.println(oos);
+		    Solicitud soli = new Solicitud (new UsuarioDTO(nickName, puerto, ip), tipo);
 		    System.out.println("Puerto disponible:");
-		    System.out.println(usuariodto.getPuerto());
-		    oos.writeObject(usuariodto);
+		    //System.out.println(usuariodto.getPuerto());
+		    oos.writeObject(soli);
 		    oos.flush();
 		    oos.close();
 		    System.out.println("gggggg");	
 		}
 		catch (IOException e) {
+			System.out.println("error");
 		}
 	}
 

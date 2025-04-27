@@ -17,5 +17,6 @@ public class Util {
 	public static final int PUERTO_SERVIDOR = 1024;
 	public static final String SOLICITA_LISTA_USUARIO = "Solicitud de lista de usuarios";
 	public static final String CTEINICIARSESION = "Iniciar sesion";
+	public static final String CTELOGIN = "Log in";
 	public static final String CTEREGISTRO = "Registro";
 }

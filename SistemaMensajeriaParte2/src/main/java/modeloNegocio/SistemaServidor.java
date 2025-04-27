@@ -14,8 +14,8 @@ import util.Util;
 
 public class SistemaServidor   {
 
-	private ArrayList<Usuario> listaUsuarios;
-	private ArrayList<Usuario> listaConectados;
+	private ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
+	private ArrayList<Usuario> listaConectados = new ArrayList<Usuario>();
 	private static SistemaServidor servidor_instancia = null;
 
 	private SistemaServidor() {
@@ -37,7 +37,7 @@ public class SistemaServidor   {
 		return false;
 	}
 
-	private void enviaUsuarioRegistrado(UsuarioDTO usuario) {
+	private void enviaUsuario(UsuarioDTO usuario) {
 		try (Socket socket = new Socket(usuario.getIp(), usuario.getPuerto())) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			oos.writeObject(usuario);
@@ -59,23 +59,39 @@ public class SistemaServidor   {
 					try (ObjectInputStream ois = new ObjectInputStream(clienteSocket.getInputStream())) {
 						Object recibido = ois.readObject();
 						System.out.println("LLEga a servereee");
-						if (recibido instanceof UsuarioDTO) {
+						/*if (recibido instanceof Sol) {
 							UsuarioDTO usuario = (UsuarioDTO) recibido;
 							System.out.println(usuario.toString());
 							registrarUsuario(usuario);
 							enviaUsuarioRegistrado(usuario);
-						} else {// entra si lo que recibe en vez de usuario es mensaje
-							if (recibido instanceof Solicitud) {	
+						} else // entra si lo que recibe en vez de usuario es mensaje
+							*/
+						if (recibido instanceof Solicitud) {	
 								Solicitud solicitud=(Solicitud)recibido;
-								if(solicitud.getTipoSolicitud()==Util.SOLICITA_LISTA_USUARIO) {
+								System.out.println("soli = "+solicitud.getTipoSolicitud());
+								if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.SOLICITA_LISTA_USUARIO)) {
 									retornaLista(solicitud.getIp(),solicitud.getPuerto());
 								}
+								else
+									if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRAR)){
+										System.out.println("Registrooooooo");
+										UsuarioDTO usuario = solicitud.getUsuarioDTO();
+										registrarUsuario(usuario);
+										enviaUsuario(usuario);
+									}
+									else
+										if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
+											System.out.println("Loginnnnn");
+											UsuarioDTO usuario = solicitud.getUsuarioDTO();
+											loginUsuario(usuario);
+											enviaUsuario(usuario);
+										}
 							}
-						}
+						
 					} catch (Exception e) {
 						System.err.println("Error al procesar solicitud del cliente: " + e.getMessage());
 					}
-					//clienteSocket.close();
+					clienteSocket.close();
 				}
 		} catch (Exception e) {
 			System.err.println("Error en el servidor central: " + e.getMessage());
@@ -131,19 +147,19 @@ public class SistemaServidor   {
 		return false;
 	}
 
-	public boolean puertoCorrecto(String nickName, int puerto) {
+	public boolean puertoEIpCorrecto(String nickName, int puerto, String IP) {
 		for (Usuario u : listaUsuarios) {
-			if (u.getNickName().equalsIgnoreCase(nickName) && u.getPuerto() == puerto) {
+			if (u.getNickName().equalsIgnoreCase(nickName) && u.getPuerto() == puerto && u.getIp().equalsIgnoreCase(IP)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public void loginUsuario(Usuario usuario) { // agregar ip
-		if (this.existeUsuarioPorNombre(usuario.getNickName()) && this.puertoCorrecto(usuario.getNickName(), usuario.getPuerto())
-				&& !this.estaConectado(usuario.getNickName())) {
-			listaConectados.add(usuario);
+	public void loginUsuario(UsuarioDTO usuario) {
+		if (this.existeUsuarioPorNombre(usuario.getNombre()) && this.puertoEIpCorrecto(usuario.getNombre(), usuario.getPuerto(), usuario.getIp())
+				&& !this.estaConectado(usuario.getNombre())) {
+			listaConectados.add(new Usuario(usuario.getNombre(), usuario.getPuerto(), usuario.getIp()));
 		}
 		// usuario logueado exitosamente
 		// else

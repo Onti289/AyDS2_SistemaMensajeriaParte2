@@ -62,6 +62,12 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 		textFieldUsuario.setBounds(150, 13, 86, 20);
 		panel_nickName.add(textFieldUsuario);
 		textFieldUsuario.setColumns(10);
+		textFieldUsuario.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyReleased(KeyEvent e) {
+		        validarCampos();
+		    }
+		});
 
 		JPanel panel_IP = new JPanel();
 		contentPane.add(panel_IP);
@@ -75,6 +81,12 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 		textFieldIP.setText(Util.IPLOCAL);
 		textFieldIP.setBounds(150, 13, 86, 20);
 		textFieldIP.setColumns(10);
+		textFieldIP.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyReleased(KeyEvent e) {
+		        validarCampos();
+		    }
+		});
 		panel_IP.add(textFieldIP);
 		
 		JPanel panel_Puerto = new JPanel();
@@ -88,6 +100,19 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 		textFieldPuerto = new JTextField();
 		textFieldPuerto.setBounds(150, 13, 86, 20);
 		textFieldPuerto.setColumns(10);
+		textFieldPuerto.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyTyped(KeyEvent e) {
+		        char c = e.getKeyChar();
+		        if (!Character.isDigit(c)) {
+		            e.consume();
+		        }
+		    }
+		    @Override
+		    public void keyReleased(KeyEvent e) {
+		        validarCampos();
+		    }
+		});
 		panel_Puerto.add(textFieldPuerto);
 		
 		JPanel panel_Registrarse = new JPanel();
@@ -96,7 +121,7 @@ public class VentanaLogin extends JFrame implements IVista, ActionListener, KeyL
 		this.botonLogin = new JButton("Iniciar sesion");
 		this.botonLogin.setToolTipText("Iniciar sesion");
 		this.botonLogin.setEnabled(false);
-		this.botonLogin.setActionCommand(Util.CTEREGISTRAR);
+		this.botonLogin.setActionCommand(Util.CTELOGIN);
 		panel_Registrarse.add(this.botonLogin);
 	}
 

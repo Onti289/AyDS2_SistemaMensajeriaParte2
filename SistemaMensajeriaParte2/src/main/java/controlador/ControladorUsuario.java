@@ -45,26 +45,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 
 	public void setUser(String nickName, int puerto, String ip, String tipo) {
 		
-		this.sistemaUsuario.activaUsuarioEnServidor(nickName, puerto, ip, tipo);
-		/*
-		this.ventana.setVisible(false);
-		this.setVentana(new VentanaPrincipal(this));
-		this.ventana.setVisible(true);
-		this.ventana.setActionListener(this);
-		*/
+		this.sistemaUsuario.enviaSolicitudAServidor(nickName, puerto, ip, tipo);
 	}
-
-    /*public void setUser(String nickName, int puerto, String ip) {
-		
-		this.sistemaUsuario.//RegistrarUsuarioEnServidor(nickName, puerto, ip);
-		
-		this.ventana.setVisible(false);
-		this.setVentana(new VentanaPrincipal(this));
-		this.ventana.setVisible(true);
-		this.ventana.setActionListener(this);
-		
-	}
-	*/
+	
 	public String getNickNamePuerto() {
 		return "Nickname:" + sistemaUsuario.getnickName() + "\nPuerto:" + sistemaUsuario.getPuerto();
 	}
@@ -162,11 +145,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 		
 					this.sistemaUsuario.iniciarServidor(puerto);
 					setUser(ventanaRegistrarse.getUsuario(), puerto, ventanaRegistrarse.getIP(), Util.CTEREGISTRAR);
-					/*
-					this.ventana.setVisible(false);
-					this.setVentana(new VentanaPrincipal(this));
-					((VentanaPrincipal) ventana).TitulonameUsuario(ventanaRegistrarse.getUsuario());
-				*/
+				
 				}
 			}
 
@@ -185,21 +164,17 @@ public class ControladorUsuario implements ActionListener, Observer {
 		
 					this.sistemaUsuario.iniciarServidor(puerto);
 					setUser(ventanaLogin.getUsuario(), puerto, ventanaLogin.getIP(), Util.CTELOGIN);
-					/*
-					this.ventana.setVisible(false);
-					this.setVentana(new VentanaPrincipal(this));
-					((VentanaPrincipal) ventana).TitulonameUsuario(ventanaRegistrarse.getUsuario());
-				*/
+				
 				}
 			}
 
 			break;
 
-		case Util.CTEAGREGARCONTACTO:
+		case Util.CTEAGREGARCONTACTO: //muestra pantalla de directorio
 			this.sistemaUsuario.pedirListaUsuarios();
 			break;
 		case Util.CTENUEVACONVER:
-			this.setVentana2(new VentanaDirectorio(this));
+			this.setVentana2(new VentanaContactos(this));
 
 			break;
 		case Util.CTEENVIAR:
@@ -231,7 +206,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 				this.ventana2.dispose();
 			}
 			break;
-		case Util.CTEAGREGAR:
+		case Util.CTEAGREGAR: //agrega el contacto a la lista de contactos
 			if (this.ventana2 instanceof VentanaDirectorio) {
 				VentanaDirectorio ventanaDirectorio = (VentanaDirectorio) this.ventana2;
 				UsuarioDTO usuario = ventanaDirectorio.getUsuario();
@@ -311,7 +286,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 			if(arg instanceof Solicitud) { //pudo registrar o loguear a usuario
 
 				Solicitud solicitud=(Solicitud)arg;
-				if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO) || solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {//SI se registro o logueo
+				if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO) || solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {//Si se registro o logueo
 					this.ventana.setVisible(false);
 					this.setVentana(new VentanaPrincipal(this));
 					((VentanaPrincipal) ventana).TitulonameUsuario(solicitud.getNombre());
@@ -323,6 +298,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 					else {
 						if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEUSUERINEXISTENTE)) {
 							((VentanaLoginORegistrar) ventana).mostrarErrorUsuarioInexistente();
+						
 						}
 					}
 					this.sistemaUsuario.cerrarServidor();
@@ -330,6 +306,25 @@ public class ControladorUsuario implements ActionListener, Observer {
 			}
 			else {
 				if(arg instanceof List<?>) {
+					List<?> lista = (List<?>) arg;
+					
+					String nombre = this.getSistemaMensajeria().getnickName();
+				
+					List<UsuarioDTO> listaUsuarios = new ArrayList<>();
+
+					for (Object obj : lista) {
+						
+					    if (obj instanceof UsuarioDTO) {
+					    	UsuarioDTO u = (UsuarioDTO)obj;
+					    	System.out.println(u.getNombre());
+					    	if(!u.getNombre().equalsIgnoreCase(nombre))
+					           listaUsuarios.add(u);
+					    }
+					}
+
+					
+					this.setVentana2(new VentanaDirectorio(this,listaUsuarios));
+					
 					//Aca hacer que vista con algun metodo tome esa lista
 					//y lo muestre por pantalla
 				}

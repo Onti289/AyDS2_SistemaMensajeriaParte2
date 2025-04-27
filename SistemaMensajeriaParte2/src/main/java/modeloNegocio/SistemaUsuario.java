@@ -188,10 +188,10 @@ public class SistemaUsuario extends Observable {
 	    }
 	}
 
-	public void activaUsuarioEnServidor(String nickName, int puerto, String ip, String tipo) {
+	public void enviaSolicitudAServidor(String nickName, int puerto, String ip, String tipo) {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) { 
 		    ObjectOutputStream oos = null;
-		    System.out.println(oos);
+	
 		    oos = new ObjectOutputStream(socket.getOutputStream());
 		    System.out.println(oos);
 		    Solicitud soli = new Solicitud (new UsuarioDTO(nickName, puerto, ip), tipo);

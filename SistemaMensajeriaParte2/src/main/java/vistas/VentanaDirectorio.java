@@ -18,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
@@ -40,7 +41,7 @@ public class VentanaDirectorio extends JFrame implements IVista, ActionListener 
 	/**
 	 * Create the frame.
 	 */
-	public VentanaDirectorio(ControladorUsuario controlador) {
+	public VentanaDirectorio(ControladorUsuario controlador,  List<UsuarioDTO> lista) {
 		this.controlador = controlador;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -54,7 +55,7 @@ public class VentanaDirectorio extends JFrame implements IVista, ActionListener 
 		this.contentPane.add(this.panelIniciar, BorderLayout.SOUTH);
 
 		this.btnAgregarContacto = new JButton("Agregar contacto");
-		this.btnAgregarContacto.setActionCommand(Util.CTEINICIARCONVERSACION);
+		this.btnAgregarContacto.setActionCommand(Util.CTEAGREGAR);
 		this.btnAgregarContacto.setToolTipText("Agregar contacto");
 		this.panelIniciar.add(this.btnAgregarContacto);
 		this.btnAgregarContacto.setEnabled(false);
@@ -64,7 +65,7 @@ public class VentanaDirectorio extends JFrame implements IVista, ActionListener 
 		DefaultListModel<UsuarioDTO> modelo = new DefaultListModel<>();
 		modelo.clear();
 
-		for (UsuarioDTO c : controlador.getAgenda()) {
+		for (UsuarioDTO c : lista) {
 			modelo.addElement(c);
 		}
 

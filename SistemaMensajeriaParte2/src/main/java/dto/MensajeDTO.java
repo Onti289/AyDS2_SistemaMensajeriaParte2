@@ -8,10 +8,10 @@ import modeloNegocio.Usuario;
 public class MensajeDTO implements Serializable {
 	private String contenido;
 	private LocalDateTime fechayhora;
-	private Usuario emisor;
-	private Usuario receptor;
+	private UsuarioDTO emisor;
+	private UsuarioDTO receptor;
 
-	public MensajeDTO(String contenido, LocalDateTime fechayhora, Usuario emisor, Usuario receptor) {
+	public MensajeDTO(String contenido, LocalDateTime fechayhora, UsuarioDTO emisor, UsuarioDTO receptor) {
 		super();
 		this.contenido = contenido;
 		this.fechayhora = fechayhora;
@@ -27,11 +27,11 @@ public class MensajeDTO implements Serializable {
 		return fechayhora;
 	}
 
-	public Usuario getEmisor() {
+	public UsuarioDTO getEmisor() {
 		return emisor;
 	}
 
-	public Usuario getReceptor() {
+	public UsuarioDTO getReceptor() {
 		return receptor;
 	}
 

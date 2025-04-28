@@ -103,7 +103,15 @@ public class Usuario implements Serializable {
 			boolean otroEsReceptor = m.getReceptor().getPuerto() == puerto && m.getReceptor().getIp().equals(ip);
 			// Ya que no pueden ambos ser emisores o receptores
 			if ((yoSoyEmisor && otroEsReceptor) || (yoSoyReceptor && otroEsEmisor)) {
-				chat.add(new MensajeDTO(m.getContenido(), m.getFechayhora(), m.getEmisor(), m.getReceptor()));
+				String nombre=m.getEmisor().getNickName();
+				int puertouser=m.getEmisor().getPuerto();
+				String ipuser=m.getEmisor().getIp();
+				UsuarioDTO emisor=new UsuarioDTO(nombre,puertouser,ipuser);
+				nombre=m.getReceptor().getNickName();
+				puertouser=m.getReceptor().getPuerto();
+				ipuser=m.getReceptor().getIp();
+				UsuarioDTO receptor=new UsuarioDTO(nombre,puertouser,ipuser);
+				chat.add(new MensajeDTO(m.getContenido(), m.getFechayhora(),emisor,receptor));
 			}
 		}
 		return chat;
@@ -122,8 +130,7 @@ public class Usuario implements Serializable {
 			this.agenda.add(contacto);
 		}
 		if (this.listaConversaciones.isEmpty() || !this.listaConversaciones.contains(contacto)) {
-
-			this.listaConversaciones.add(0, contacto);
+			this.listaConversaciones.add(contacto);
 		}
 	}
 
@@ -153,7 +160,7 @@ public class Usuario implements Serializable {
 				return contacto;
 			}
 		}
-		return null; // No se encontr
+		return null; // No se encontro
 	}
 
 	public boolean estaContacto(int puerto) {

@@ -24,9 +24,9 @@ public class UsuarioRenderer extends JLabel implements ListCellRenderer<UsuarioD
 
 		// Icono de notificaci�n si tiene mensaje nuevo
 		String texto = usuarioDTO.toString(); // o value.toString()
-		if (usuariosConMensajesNuevos.contains(usuarioDTO)) {
-			texto = "? " + texto;
-		}
+		 if (usuariosConMensajesNuevos.contains(usuarioDTO)) {
+		        texto = "🔔 " + texto; // Aquí ponemos la campanita emoji
+		    }
 
 		setText(texto);
 

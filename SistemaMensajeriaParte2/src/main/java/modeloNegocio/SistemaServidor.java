@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
 
 import dto.*;
 
@@ -17,7 +18,7 @@ public class SistemaServidor {
 	private ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
 	private ArrayList<Usuario> listaConectados = new ArrayList<Usuario>();
 	private static SistemaServidor servidor_instancia = null;
-
+	private ArrayList<Mensaje> mensajesPendientes=new ArrayList<Mensaje>();
 	private SistemaServidor() {
 
 	}
@@ -59,12 +60,7 @@ public class SistemaServidor {
 					try (ObjectInputStream ois = new ObjectInputStream(clienteSocket.getInputStream())) {
 						Object recibido = ois.readObject();
 						System.out.println("LLEga a servereee");
-						/*
-						 * if (recibido instanceof Sol) { UsuarioDTO usuario = (UsuarioDTO) recibido;
-						 * System.out.println(usuario.toString()); registrarUsuario(usuario);
-						 * enviaUsuarioRegistrado(usuario); } else // entra si lo que recibe en vez de
-						 * usuario es mensaje
-						 */
+						
 						if (recibido instanceof Solicitud) {
 							Solicitud solicitud = (Solicitud) recibido;
 							System.out.println("soli = " + solicitud.getTipoSolicitud());
@@ -80,10 +76,10 @@ public class SistemaServidor {
 								}
 								enviaRespuestaUsuario(solicitud);
 							} else if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
-								System.out.println("Loginnnnn");
+				
 								UsuarioDTO usuario = solicitud.getUsuarioDTO();
 								int tipo = loginUsuario(usuario);
-								System.out.println(tipo + "boca");
+								
 								if (tipo == 1) {
 									solicitud.setTipoSolicitud(Util.CTELOGIN);
 								} else {
@@ -100,10 +96,21 @@ public class SistemaServidor {
 							else {
 								if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEDESCONEXION)) {
 									quitarUsuarioDesconectado(solicitud.getNombre());
+								}else {
+									if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTESOLICITARMENSAJES)) {
+										UsuarioDTO usuario=solicitud.getUsuarioDTO();
+										this.retornaListaMensajesPendientes(usuario.getIp(), usuario.getPuerto(),entregarMensajesPendientes(usuario.getNombre(),usuario.getIp(),usuario.getPuerto()));
+									}
 								}
 							}
 						}
+						else {
+							if(recibido instanceof Mensaje ) {
+								Mensaje mensaje = (Mensaje) recibido;
+								enviarMensaje(mensaje);
 
+							}
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -115,6 +122,47 @@ public class SistemaServidor {
 			}
 		});
 		serverThread.start();
+	}
+
+	private List<MensajeDTO> entregarMensajesPendientes(String nombre,String ip,int puerto) {
+		int i=0;
+		Mensaje m;
+		MensajeDTO mdto;
+		UsuarioDTO ureceptor;
+		UsuarioDTO uemisor;
+		List<MensajeDTO> listamsj=new ArrayList<MensajeDTO>();
+		while(i<this.mensajesPendientes.size()) {
+			m=this.mensajesPendientes.get(i);
+			String nombreuser=m.getEmisor().getNickName();
+			int puertouser=m.getEmisor().getPuerto();
+			String ipuser=m.getEmisor().getIp();
+			uemisor=new UsuarioDTO(nombreuser,puertouser,ipuser);
+			nombreuser=m.getReceptor().getNickName();
+			puertouser=m.getReceptor().getPuerto();
+			ipuser=m.getReceptor().getIp();
+			ureceptor=new UsuarioDTO(nombreuser,puertouser,ipuser);
+			if(ureceptor.getNombre().equalsIgnoreCase(nombre) && ureceptor.getPuerto()==puerto && ureceptor.getIp().equalsIgnoreCase(ip)) {
+				mdto=new MensajeDTO(m.getContenido(),m.getFechayhora(),uemisor,ureceptor);
+				listamsj.add(mdto);
+				this.mensajesPendientes.remove(i);
+			}
+			else {
+				i++;
+			}
+		}
+		return listamsj;
+	}
+
+	private void enviarMensaje(Mensaje mensaje) {
+		try (Socket socket = new Socket(mensaje.getReceptor().getIp(), mensaje.getReceptor().getPuerto())) {
+			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			oos.writeObject(mensaje);
+			oos.flush();
+			oos.close();
+		} catch (IOException e) {
+			this.mensajesPendientes.add(mensaje);
+		}
+		
 	}
 
 	private void quitarUsuarioDesconectado(String nombre) {
@@ -129,7 +177,16 @@ public class SistemaServidor {
 	    }
 	}
 
+	private void retornaListaMensajesPendientes(String ip, int puerto,List<MensajeDTO> msjPendientes) {
+		try (Socket socket = new Socket(ip, puerto)) {
+			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			oos.writeObject(msjPendientes);
+			oos.flush();
+			oos.close();
+		} catch (IOException e) {
 
+		}
+	}
 	private void retornaLista(String ip, int puerto) {
 		try (Socket socket = new Socket(ip, puerto)) {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());

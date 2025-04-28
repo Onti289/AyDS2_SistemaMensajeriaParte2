@@ -112,22 +112,38 @@ public class SistemaUsuario extends Observable {
 								}
 								setChanged(); // importante
 								notifyObservers(solicitud);
-							} else {
-								if (recibido instanceof ContactoDTO) {
-									ContactoDTO contactoDTO = (ContactoDTO) recibido;
-
+							}else {
+										if(recibido instanceof List<?>) {
+											List<?> lista = (List<?>) recibido;
+										    if (!lista.isEmpty() && lista.get(0) instanceof UsuarioDTO) {
+										        List<UsuarioDTO> usuarios = (List<UsuarioDTO>) lista;
+										        setChanged(); // importante
+												notifyObservers(usuarios);
+										    }else {
+										    	if(!lista.isEmpty() && lista.get(0) instanceof MensajeDTO) {
+											        List<MensajeDTO> mensajes = (List<MensajeDTO>) lista;
+											        
+											        for(MensajeDTO m:mensajes) {
+											        	String nick= m.getEmisor().getNombre();
+											        	int puertoaux=m.getEmisor().getPuerto();
+											        	String ip=m.getEmisor().getIp();
+											        	Usuario emisor=new Usuario(nick,puertoaux,ip);
+											        	nick= m.getReceptor().getNombre();
+											        	puertoaux=m.getReceptor().getPuerto();
+											        	ip=m.getReceptor().getIp();
+											        	Usuario receptor=new Usuario(nick,puertoaux,ip);
+											        	this.usuario.recibirMensaje(new Mensaje(m.getContenido(),m.getFechayhora(),emisor,receptor));
+											        }
+											        setChanged(); // importante
+													notifyObservers(mensajes);
+										    	}
+										    }
+										    
+										    
+										}
+									
 								}
-								else {
-									if(recibido instanceof List<?>) {
-										List<?> lista = (List<?>) recibido;
-									    if (!lista.isEmpty() && lista.get(0) instanceof UsuarioDTO) {
-									        List<UsuarioDTO> usuarios = (List<UsuarioDTO>) lista;
-									    }
-									    setChanged(); // importante
-										notifyObservers(lista);
-									}
-								}
-							}
+							
 						}
 
 					} catch (ClassNotFoundException e) {
@@ -201,16 +217,12 @@ public class SistemaUsuario extends Observable {
 	public void enviaSolicitudAServidor(String nickName, int puerto, String ip, String tipo) {
 		try (Socket socket = new Socket(Util.IPLOCAL, Util.PUERTO_SERVIDOR)) { 
 		    ObjectOutputStream oos = null;
-	
 		    oos = new ObjectOutputStream(socket.getOutputStream());
-		    System.out.println(oos);
 		    Solicitud soli = new Solicitud (new UsuarioDTO(nickName, puerto, ip), tipo);
-		    System.out.println("Puerto disponible:");
-		    //System.out.println(usuariodto.getPuerto());
 		    oos.writeObject(soli);
 		    oos.flush();
 		    oos.close();
-		    System.out.println("gggggg");	
+		    	
 		}
 		catch (IOException e) {
 			System.out.println("error");

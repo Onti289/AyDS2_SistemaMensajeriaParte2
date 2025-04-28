@@ -24,5 +24,6 @@ public class Util {
 	public static final String CTEREGRISTRARSE = "Registrarse";
 	public static final String CTEINICIOSESION = "Inicio sesion";
 	public static final String CTEDESCONEXION = "Usuario se desconecta";
+	public static final String CTESOLICITARMENSAJES = "Usuario solicita el historial de mensajes pendientes";
 	
 }

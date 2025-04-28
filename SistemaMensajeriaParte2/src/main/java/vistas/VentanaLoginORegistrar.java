@@ -189,7 +189,7 @@ public class VentanaLoginORegistrar extends JFrame implements IVista, ActionList
 	public void mostrarErrorUsuarioInexistente() {
 	    JOptionPane.showMessageDialog(
 	        this,
-	        "El usuario ya Inexistente. Intente con otro usuario.",
+	        "El usuario es Inexistente. Intente con otro usuario.",
 	        "Error de Login",
 	        JOptionPane.ERROR_MESSAGE
 	    );

@@ -96,12 +96,12 @@ public class VentanaDirectorio extends JFrame implements IVista, ActionListener 
 	}
 	
 	public void mostrarConfirmacionContactoAgregado() {
-        JOptionPane.showMessageDialog(this, "�Contacto agregado exitosamente!", "Registro exitoso",
+        JOptionPane.showMessageDialog(this, "Contacto agregado exitosamente!", "Registro exitoso",
                 JOptionPane.INFORMATION_MESSAGE);
     }
 	
 	public void mostrarErrorContactoYaAgendado() {
-		JOptionPane.showMessageDialog(this, "El contacto que intent�s agregar ya est� en tu agenda.",
+		JOptionPane.showMessageDialog(this, "El contacto que intentas agregar ya esta en tu agenda.",
 				"Contacto ya agendado", JOptionPane.ERROR_MESSAGE);
 	}
 	

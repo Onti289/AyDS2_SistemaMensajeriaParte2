@@ -208,7 +208,7 @@ public class SistemaUsuario extends Observable {
 
 		} catch (IOException e) {
 			ErrorEnvioMensajeException error = new ErrorEnvioMensajeException(
-					"Error de conexion: el destinario se encuentra desconectado");
+					"Error de conexion: el Servidor se encuentra desconectado");
 			setChanged(); // importante
 			notifyObservers(error);
 		}
